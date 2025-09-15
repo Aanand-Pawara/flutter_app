@@ -1,0 +1,179 @@
+﻿Analyzing flutter_app...                                        
+
+   info - The private field _bookmarkedResources could be 'final' - lib\providers\app_provider.dart:68:16 - prefer_final_fields
+   info - The private field _completedResources could be 'final' - lib\providers\app_provider.dart:69:16 - prefer_final_fields
+   info - The private field _inProgressResources could be 'final' - lib\providers\app_provider.dart:70:16 - prefer_final_fields
+   info - The imported package 'go_router' isn't a dependency of the importing package - lib\screens\assessment_screen.dart:3:8 - depend_on_referenced_packages
+  error - Target of URI doesn't exist: 'package:go_router/go_router.dart' - lib\screens\assessment_screen.dart:3:8 - uri_does_not_exist
+  error - The method 'updateAssessmentAnswer' isn't defined for the type 'AppProvider' - lib\screens\assessment_screen.dart:97:17 - undefined_method
+  error - The method 'updateAssessmentProgress' isn't defined for the type 'AppProvider' - lib\screens\assessment_screen.dart:103:19 - undefined_method
+  error - The method 'updateAssessmentProgress' isn't defined for the type 'AppProvider' - lib\screens\assessment_screen.dart:113:17 - undefined_method
+   info - Unnecessary 'const' keyword - lib\screens\assessment_screen.dart:118:26 - unnecessary_const
+  error - The method 'go' isn't defined for the type 'BuildContext' - lib\screens\assessment_screen.dart:122:13 - undefined_method
+  error - The method 'go' isn't defined for the type 'BuildContext' - lib\screens\assessment_screen.dart:152:23 - undefined_method
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\assessment_screen.dart:220:49 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\assessment_screen.dart:267:57 - deprecated_member_use
+  error - The getter 'assessmentData' isn't defined for the type 'AppProvider' - lib\screens\assessment_screen.dart:315:62 - undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\assessment_screen.dart:326:84 - deprecated_member_use
+   info - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre - lib\screens\assessment_screen.dart:336:43 - deprecated_member_use
+   info - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre - lib\screens\assessment_screen.dart:337:43 - deprecated_member_use
+  error - The getter 'assessmentData' isn't defined for the type 'AppProvider' - lib\screens\assessment_screen.dart:380:49 - undefined_getter
+   info - Don't use 'BuildContext's across async gaps - lib\screens\auth_screen.dart:113:22 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\screens\auth_screen.dart:130:28 - use_build_context_synchronously
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\auth_screen.dart:240:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\auth_screen.dart:258:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\auth_screen.dart:455:29 - deprecated_member_use
+warning - The declaration '_buildAuthForm' isn't referenced - lib\screens\auth_screen.dart:479:10 - unused_element
+warning - The declaration '_buildSocialLogin' isn't referenced - lib\screens\auth_screen.dart:636:10 - unused_element
+warning - The declaration '_buildToggleAuthMode' isn't referenced - lib\screens\auth_screen.dart:700:10 - unused_element
+   info - Don't use 'BuildContext's across async gaps - lib\screens\career_selection_screen.dart:146:20 - use_build_context_synchronously
+   info - 'scale' is deprecated and shouldn't be used. Use scaleByVector3, scaleByVector4, or scaleByDouble instead - lib\screens\career_selection_screen.dart:281:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\career_selection_screen.dart:288:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\career_selection_screen.dart:305:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\career_selection_screen.dart:306:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\career_selection_screen.dart:350:46 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\career_selection_screen.dart:362:46 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\career_selection_screen.dart:363:46 - deprecated_member_use
+warning - The value of the field '_quickReplies' isn't used - lib\screens\chat_screen.dart:21:22 - unused_field
+warning - The declaration '_sendQuickReply' isn't referenced - lib\screens\chat_screen.dart:159:8 - unused_element
+warning - The declaration '_generateAIResponse' isn't referenced - lib\screens\chat_screen.dart:178:10 - unused_element
+  error - The name '_generateAIResponse' is already defined - lib\screens\chat_screen.dart:178:10 - duplicate_definition
+warning - The declaration '_scrollToBottom' isn't referenced - lib\screens\chat_screen.dart:191:8 - unused_element
+  error - The name '_scrollToBottom' is already defined - lib\screens\chat_screen.dart:191:8 - duplicate_definition
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\chat_screen.dart:318:42 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\chat_screen.dart:418:42 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\chat_screen_simple.dart:133:42 - deprecated_member_use
+warning - Unused import: 'package:provider/provider.dart' - lib\screens\dashboard_screen_simple.dart:2:8 - unused_import
+warning - Unused import: '../providers/app_provider.dart' - lib\screens\dashboard_screen_simple.dart:3:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\dashboard_screen_simple.dart:62:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\dashboard_screen_simple.dart:144:30 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\get_started_screen.dart:99:52 - deprecated_member_use
+  error - Undefined name 'context' - lib\screens\get_started_screen.dart:143:46 - undefined_identifier
+  error - Undefined name 'context' - lib\screens\get_started_screen.dart:144:47 - undefined_identifier
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\get_started_screen.dart:146:38 - deprecated_member_use
+  error - Undefined name 'context' - lib\screens\get_started_screen.dart:152:47 - undefined_identifier
+  error - Undefined name 'context' - lib\screens\get_started_screen.dart:155:52 - undefined_identifier
+  error - Undefined name 'context' - lib\screens\get_started_screen.dart:159:58 - undefined_identifier
+warning - Unused import: 'package:provider/provider.dart' - lib\screens\home_screen.dart:2:8 - unused_import
+warning - Unused import: '../providers/app_provider.dart' - lib\screens\home_screen.dart:3:8 - unused_import
+warning - The value of the field '_navItems' isn't used - lib\screens\home_screen.dart:33:39 - unused_field
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\home_screen.dart:147:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\home_screen.dart:240:49 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\home_screen.dart:242:68 - deprecated_member_use
+warning - Unused import: 'package:provider/provider.dart' - lib\screens\interview_training_screen.dart:2:8 - unused_import
+warning - Unused import: '../providers/app_provider.dart' - lib\screens\interview_training_screen.dart:6:8 - unused_import
+warning - The value of the field '_hasAnswered' isn't used - lib\screens\interview_training_screen.dart:20:8 - unused_field
+   info - The private field _userAnswers could be 'final' - lib\screens\interview_training_screen.dart:25:16 - prefer_final_fields
+   info - The private field _practiceStats could be 'final' - lib\screens\interview_training_screen.dart:27:20 - prefer_final_fields
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\screens\interview_training_screen.dart:175:23 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\screens\interview_training_screen.dart:213:23 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\interview_training_screen.dart:322:40 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\interview_training_screen.dart:324:59 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\interview_training_screen.dart:348:40 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\interview_training_screen.dart:350:59 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\interview_training_screen.dart:434:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\interview_training_screen.dart:510:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\interview_training_screen.dart:518:28 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\interview_training_screen.dart:620:22 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\interview_training_screen.dart:622:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\interview_training_screen.dart:685:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\interview_training_screen.dart:862:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\interview_training_screen.dart:873:32 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\interview_training_screen.dart:976:22 - deprecated_member_use
+   info - Unnecessary 'const' keyword - lib\screens\interview_training_screen.dart:1018:26 - unnecessary_const
+   info - The imported package 'go_router' isn't a dependency of the importing package - lib\screens\landing_screen.dart:2:8 - depend_on_referenced_packages
+  error - Target of URI doesn't exist: 'package:go_router/go_router.dart' - lib\screens\landing_screen.dart:2:8 - uri_does_not_exist
+  error - The method 'go' isn't defined for the type 'BuildContext' - lib\screens\landing_screen.dart:29:48 - undefined_method
+  error - The method 'go' isn't defined for the type 'BuildContext' - lib\screens\landing_screen.dart:59:50 - undefined_method
+  error - The method 'go' isn't defined for the type 'BuildContext' - lib\screens\landing_screen.dart:66:50 - undefined_method
+   info - 'red' is deprecated and shouldn't be used. Use (*.r * 255.0).round() & 0xff - lib\screens\landing_screen.dart:172:76 - deprecated_member_use
+   info - 'green' is deprecated and shouldn't be used. Use (*.g * 255.0).round() & 0xff - lib\screens\landing_screen.dart:172:112 - deprecated_member_use
+   info - 'blue' is deprecated and shouldn't be used. Use (*.b * 255.0).round() & 0xff - lib\screens\landing_screen.dart:172:150 - deprecated_member_use
+  error - The method 'go' isn't defined for the type 'BuildContext' - lib\screens\landing_screen.dart:197:50 - undefined_method
+   info - 'red' is deprecated and shouldn't be used. Use (*.r * 255.0).round() & 0xff - lib\screens\landing_screen.dart:279:74 - deprecated_member_use
+   info - 'green' is deprecated and shouldn't be used. Use (*.g * 255.0).round() & 0xff - lib\screens\landing_screen.dart:279:110 - deprecated_member_use
+   info - 'blue' is deprecated and shouldn't be used. Use (*.b * 255.0).round() & 0xff - lib\screens\landing_screen.dart:279:148 - deprecated_member_use
+   info - The imported package 'go_router' isn't a dependency of the importing package - lib\screens\login_screen.dart:3:8 - depend_on_referenced_packages
+  error - Target of URI doesn't exist: 'package:go_router/go_router.dart' - lib\screens\login_screen.dart:3:8 - uri_does_not_exist
+  error - The method 'go' isn't defined for the type 'BuildContext' - lib\screens\login_screen.dart:47:17 - undefined_method
+  error - The method 'go' isn't defined for the type 'BuildContext' - lib\screens\login_screen.dart:66:15 - undefined_method
+  error - The method 'go' isn't defined for the type 'BuildContext' - lib\screens\login_screen.dart:76:36 - undefined_method
+   info - 'red' is deprecated and shouldn't be used. Use (*.r * 255.0).round() & 0xff - lib\screens\onboarding_screen.dart:206:49 - deprecated_member_use
+   info - 'green' is deprecated and shouldn't be used. Use (*.g * 255.0).round() & 0xff - lib\screens\onboarding_screen.dart:206:65 - deprecated_member_use
+   info - 'blue' is deprecated and shouldn't be used. Use (*.b * 255.0).round() & 0xff - lib\screens\onboarding_screen.dart:206:83 - deprecated_member_use
+   info - 'red' is deprecated and shouldn't be used. Use (*.r * 255.0).round() & 0xff - lib\screens\onboarding_screen.dart:207:49 - deprecated_member_use
+   info - 'green' is deprecated and shouldn't be used. Use (*.g * 255.0).round() & 0xff - lib\screens\onboarding_screen.dart:207:65 - deprecated_member_use
+   info - 'blue' is deprecated and shouldn't be used. Use (*.b * 255.0).round() & 0xff - lib\screens\onboarding_screen.dart:207:83 - deprecated_member_use
+   info - The imported package 'file_picker' isn't a dependency of the importing package - lib\screens\resume_analysis_screen.dart:3:8 - depend_on_referenced_packages
+  error - Target of URI doesn't exist: 'package:file_picker/file_picker.dart' - lib\screens\resume_analysis_screen.dart:3:8 - uri_does_not_exist
+   info - The private field _isAnalyzing could be 'final' - lib\screens\resume_analysis_screen.dart:23:8 - prefer_final_fields
+   info - The private field _hasResults could be 'final' - lib\screens\resume_analysis_screen.dart:24:8 - prefer_final_fields
+   info - The private field _analysisResults could be 'final' - lib\screens\resume_analysis_screen.dart:25:24 - prefer_final_fields
+  error - Undefined class 'FilePickerResult' - lib\screens\resume_analysis_screen.dart:57:5 - undefined_class
+  error - Undefined name 'FilePicker' - lib\screens\resume_analysis_screen.dart:57:38 - undefined_identifier
+  error - Undefined name 'FileType' - lib\screens\resume_analysis_screen.dart:58:13 - undefined_identifier
+   info - Unnecessary 'const' keyword - lib\screens\resume_analysis_screen.dart:92:28 - unnecessary_const
+   info - Unnecessary 'const' keyword - lib\screens\resume_analysis_screen.dart:105:28 - unnecessary_const
+  error - 1 positional argument expected by '_buildResultsSection', but 0 found - lib\screens\resume_analysis_screen.dart:140:55 - not_enough_positional_arguments
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\screens\resume_analysis_screen.dart:235:17 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\screens\resume_analysis_screen.dart:261:17 - deprecated_member_use
+  error - The method 'CircularPercentIndicator' isn't defined for the type '_ResumeAnalysisScreenState' - lib\screens\resume_analysis_screen.dart:343:22 - undefined_method
+  error - Undefined name 'CircularStrokeCap' - lib\screens\resume_analysis_screen.dart:367:36 - undefined_identifier
+warning - The declaration '_buildResultsSection' isn't referenced - lib\screens\resume_analysis_screen.dart:415:10 - unused_element
+  error - The name '_buildResultsSection' is already defined - lib\screens\resume_analysis_screen.dart:415:10 - duplicate_definition
+   info - 'red' is deprecated and shouldn't be used. Use (*.r * 255.0).round() & 0xff - lib\screens\resume_analysis_screen.dart:480:41 - deprecated_member_use
+   info - 'green' is deprecated and shouldn't be used. Use (*.g * 255.0).round() & 0xff - lib\screens\resume_analysis_screen.dart:480:52 - deprecated_member_use
+   info - 'blue' is deprecated and shouldn't be used. Use (*.b * 255.0).round() & 0xff - lib\screens\resume_analysis_screen.dart:480:65 - deprecated_member_use
+   info - 'red' is deprecated and shouldn't be used. Use (*.r * 255.0).round() & 0xff - lib\screens\resume_analysis_screen.dart:482:60 - deprecated_member_use
+   info - 'green' is deprecated and shouldn't be used. Use (*.g * 255.0).round() & 0xff - lib\screens\resume_analysis_screen.dart:482:71 - deprecated_member_use
+   info - 'blue' is deprecated and shouldn't be used. Use (*.b * 255.0).round() & 0xff - lib\screens\resume_analysis_screen.dart:482:84 - deprecated_member_use
+  error - Target of URI doesn't exist: 'dashboard_screen.dart' - lib\screens\user_selection_screen.dart:6:8 - uri_does_not_exist
+  error - The name 'DashboardScreen' isn't a class - lib\screens\user_selection_screen.dart:180:74 - creation_with_non_type
+   info - 'red' is deprecated and shouldn't be used. Use (*.r * 255.0).round() & 0xff - lib\screens\user_selection_screen.dart:329:65 - deprecated_member_use
+   info - 'green' is deprecated and shouldn't be used. Use (*.g * 255.0).round() & 0xff - lib\screens\user_selection_screen.dart:329:85 - deprecated_member_use
+   info - 'blue' is deprecated and shouldn't be used. Use (*.b * 255.0).round() & 0xff - lib\screens\user_selection_screen.dart:329:107 - deprecated_member_use
+   info - 'red' is deprecated and shouldn't be used. Use (*.r * 255.0).round() & 0xff - lib\screens\user_selection_screen.dart:337:56 - deprecated_member_use
+   info - 'green' is deprecated and shouldn't be used. Use (*.g * 255.0).round() & 0xff - lib\screens\user_selection_screen.dart:337:76 - deprecated_member_use
+   info - 'blue' is deprecated and shouldn't be used. Use (*.b * 255.0).round() & 0xff - lib\screens\user_selection_screen.dart:337:98 - deprecated_member_use
+   info - 'red' is deprecated and shouldn't be used. Use (*.r * 255.0).round() & 0xff - lib\screens\user_selection_screen.dart:350:58 - deprecated_member_use
+   info - 'green' is deprecated and shouldn't be used. Use (*.g * 255.0).round() & 0xff - lib\screens\user_selection_screen.dart:350:78 - deprecated_member_use
+   info - 'blue' is deprecated and shouldn't be used. Use (*.b * 255.0).round() & 0xff - lib\screens\user_selection_screen.dart:350:100 - deprecated_member_use
+warning - The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used - lib\services\api_service.dart:39:68 - invalid_null_aware_operator
+warning - The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used - lib\services\api_service.dart:40:74 - invalid_null_aware_operator
+warning - The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used - lib\services\api_service.dart:41:68 - invalid_null_aware_operator
+warning - The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used - lib\services\api_service.dart:42:64 - invalid_null_aware_operator
+warning - The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used - lib\services\api_service.dart:43:74 - invalid_null_aware_operator
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:63:7 - avoid_print
+warning - The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used - lib\services\api_service.dart:85:66 - invalid_null_aware_operator
+warning - The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used - lib\services\api_service.dart:86:71 - invalid_null_aware_operator
+warning - The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used - lib\services\api_service.dart:87:71 - invalid_null_aware_operator
+warning - The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used - lib\services\api_service.dart:88:64 - invalid_null_aware_operator
+warning - The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used - lib\services\api_service.dart:89:72 - invalid_null_aware_operator
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:110:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:168:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:230:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:288:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:345:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:379:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:411:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:439:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:483:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\huggingface_service.dart:49:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\huggingface_service.dart:81:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\huggingface_service.dart:114:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\huggingface_service.dart:147:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\huggingface_service.dart:187:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\huggingface_service.dart:244:7 - avoid_print
+   info - 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre - lib\utils\app_theme.dart:90:9 - deprecated_member_use
+warning - Unused import: 'package:flutter/material.dart' - test\widget_test.dart:8:8 - unused_import
+   info - Can't use a relative path to import a library in 'lib' - test\widget_test.dart:11:8 - avoid_relative_lib_imports
+
+flutter : 167 issues found. (ran in 4.7s)
+At line:1 char:1
++ flutter analyze --no-congratulate 2>&1 | Out-File 
+-FilePath "analysis ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (167 issues 
+    found. (ran in 4.7s):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
