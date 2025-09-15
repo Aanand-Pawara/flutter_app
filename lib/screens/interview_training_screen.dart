@@ -9,7 +9,8 @@ class InterviewTrainingScreen extends StatefulWidget {
   const InterviewTrainingScreen({super.key});
 
   @override
-  State<InterviewTrainingScreen> createState() => _InterviewTrainingScreenState();
+  State<InterviewTrainingScreen> createState() =>
+      _InterviewTrainingScreenState();
 }
 
 class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
@@ -34,14 +35,16 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
     {
       'category': 'Technical',
       'difficulty': 'Beginner',
-      'question': 'What is the difference between var, let, and const in JavaScript?',
+      'question':
+          'What is the difference between var, let, and const in JavaScript?',
       'tips': 'Focus on scope, hoisting, and mutability differences',
       'timeLimit': 120,
     },
     {
       'category': 'Technical',
       'difficulty': 'Intermediate',
-      'question': 'Explain the concept of closures in programming and provide an example.',
+      'question':
+          'Explain the concept of closures in programming and provide an example.',
       'tips': 'Mention lexical scoping and practical use cases',
       'timeLimit': 180,
     },
@@ -55,7 +58,8 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
     {
       'category': 'Behavioral',
       'difficulty': 'Intermediate',
-      'question': 'Describe a situation where you had to learn a new technology quickly.',
+      'question':
+          'Describe a situation where you had to learn a new technology quickly.',
       'tips': 'Show adaptability and learning methodology',
       'timeLimit': 180,
     },
@@ -81,10 +85,13 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
   }
 
   List<Map<String, dynamic>> get _filteredQuestions {
-    return _interviewQuestions.where((q) => 
-      q['category'] == _selectedCategory && 
-      q['difficulty'] == _selectedDifficulty
-    ).toList();
+    return _interviewQuestions
+        .where(
+          (q) =>
+              q['category'] == _selectedCategory &&
+              q['difficulty'] == _selectedDifficulty,
+        )
+        .toList();
   }
 
   @override
@@ -177,14 +184,25 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                       ),
-                      items: ['Technical', 'Behavioral', 'System Design', 'HR Questions']
-                          .map((category) => DropdownMenuItem(
-                                value: category,
-                                child: Text(category),
-                              ))
-                          .toList(),
+                      items:
+                          [
+                                'Technical',
+                                'Behavioral',
+                                'System Design',
+                                'HR Questions',
+                              ]
+                              .map(
+                                (category) => DropdownMenuItem(
+                                  value: category,
+                                  child: Text(category),
+                                ),
+                              )
+                              .toList(),
                       onChanged: (value) {
                         setState(() {
                           _selectedCategory = value!;
@@ -215,13 +233,18 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                       ),
                       items: ['Beginner', 'Intermediate', 'Advanced']
-                          .map((difficulty) => DropdownMenuItem(
-                                value: difficulty,
-                                child: Text(difficulty),
-                              ))
+                          .map(
+                            (difficulty) => DropdownMenuItem(
+                              value: difficulty,
+                              child: Text(difficulty),
+                            ),
+                          )
                           .toList(),
                       onChanged: (value) {
                         setState(() {
@@ -253,17 +276,14 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
           child: Text(
             'No questions available for this combination.\nTry different filters.',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
           ),
         ),
       );
     }
 
     final question = _filteredQuestions[_currentQuestionIndex];
-    
+
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -282,7 +302,10 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(20),
@@ -298,10 +321,7 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
               ),
               Text(
                 'Question ${_currentQuestionIndex + 1}/${_filteredQuestions.length}',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textSecondary,
-                ),
+                style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -325,7 +345,11 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
             ),
             child: Row(
               children: [
-                Icon(Icons.lightbulb_outline, color: AppColors.warning, size: 20),
+                Icon(
+                  Icons.lightbulb_outline,
+                  color: AppColors.warning,
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -351,7 +375,11 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
               ),
               child: Row(
                 children: [
-                  Icon(Icons.fiber_manual_record, color: AppColors.error, size: 16),
+                  Icon(
+                    Icons.fiber_manual_record,
+                    color: AppColors.error,
+                    size: 16,
+                  ),
                   const SizedBox(width: 8),
                   Text(
                     'Recording: ${_recordingSeconds}s',
@@ -371,9 +399,13 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
                 child: ElevatedButton.icon(
                   onPressed: _isRecording ? _stopRecording : _startRecording,
                   icon: Icon(_isRecording ? Icons.stop : Icons.mic),
-                  label: Text(_isRecording ? 'Stop Recording' : 'Start Recording'),
+                  label: Text(
+                    _isRecording ? 'Stop Recording' : 'Start Recording',
+                  ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _isRecording ? AppColors.error : AppColors.primary,
+                    backgroundColor: _isRecording
+                        ? AppColors.error
+                        : AppColors.primary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
@@ -388,7 +420,10 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.accent,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -440,7 +475,10 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 12,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
@@ -500,7 +538,13 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
     );
   }
 
-  Widget _buildModeCard(String title, String description, IconData icon, Color color, String duration) {
+  Widget _buildModeCard(
+    String title,
+    String description,
+    IconData icon,
+    Color color,
+    String duration,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -601,11 +645,32 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
           const SizedBox(height: 20),
           Row(
             children: [
-              Expanded(child: _buildStatCard('Sessions', '23', Icons.play_circle, AppColors.primary)),
+              Expanded(
+                child: _buildStatCard(
+                  'Sessions',
+                  '23',
+                  Icons.play_circle,
+                  AppColors.primary,
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _buildStatCard('Hours', '12.5', Icons.schedule, AppColors.accent)),
+              Expanded(
+                child: _buildStatCard(
+                  'Hours',
+                  '12.5',
+                  Icons.schedule,
+                  AppColors.accent,
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _buildStatCard('Score', '78%', Icons.trending_up, AppColors.success)),
+              Expanded(
+                child: _buildStatCard(
+                  'Score',
+                  '78%',
+                  Icons.trending_up,
+                  AppColors.success,
+                ),
+              ),
             ],
           ),
         ],
@@ -613,7 +678,12 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -635,10 +705,7 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
           ),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
           ),
         ],
       ),
@@ -665,15 +732,35 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
             ),
           ),
           const SizedBox(height: 16),
-          _buildSessionItem('Technical Interview', '85%', '2 hours ago', AppColors.success),
-          _buildSessionItem('Behavioral Questions', '72%', '1 day ago', AppColors.warning),
-          _buildSessionItem('System Design', '90%', '3 days ago', AppColors.success),
+          _buildSessionItem(
+            'Technical Interview',
+            '85%',
+            '2 hours ago',
+            AppColors.success,
+          ),
+          _buildSessionItem(
+            'Behavioral Questions',
+            '72%',
+            '1 day ago',
+            AppColors.warning,
+          ),
+          _buildSessionItem(
+            'System Design',
+            '90%',
+            '3 days ago',
+            AppColors.success,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildSessionItem(String type, String score, String time, Color scoreColor) {
+  Widget _buildSessionItem(
+    String type,
+    String score,
+    String time,
+    Color scoreColor,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -852,7 +939,12 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
     );
   }
 
-  Widget _buildTipCard(String title, List<String> tips, IconData icon, Color color) {
+  Widget _buildTipCard(
+    String title,
+    List<String> tips,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -887,33 +979,35 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
             ],
           ),
           const SizedBox(height: 16),
-          ...tips.map((tip) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      margin: const EdgeInsets.only(top: 6, right: 12),
-                      decoration: BoxDecoration(
-                        color: color,
-                        shape: BoxShape.circle,
+          ...tips.map(
+            (tip) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 6,
+                    height: 6,
+                    margin: const EdgeInsets.only(top: 6, right: 12),
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      tip,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.textSecondary,
+                        height: 1.4,
                       ),
                     ),
-                    Expanded(
-                      child: Text(
-                        tip,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: AppColors.textSecondary,
-                          height: 1.4,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -942,15 +1036,30 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
           Row(
             children: [
               Expanded(
-                child: _buildQuickStat('Questions', '8', Icons.quiz, AppColors.primary),
+                child: _buildQuickStat(
+                  'Questions',
+                  '8',
+                  Icons.quiz,
+                  AppColors.primary,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildQuickStat('Time', '25m', Icons.timer, AppColors.accent),
+                child: _buildQuickStat(
+                  'Time',
+                  '25m',
+                  Icons.timer,
+                  AppColors.accent,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildQuickStat('Streak', '5 days', Icons.local_fire_department, AppColors.warning),
+                child: _buildQuickStat(
+                  'Streak',
+                  '5 days',
+                  Icons.local_fire_department,
+                  AppColors.warning,
+                ),
               ),
             ],
           ),
@@ -959,7 +1068,12 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
     );
   }
 
-  Widget _buildQuickStat(String label, String value, IconData icon, Color color) {
+  Widget _buildQuickStat(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     // Use real stats from practice
     String displayValue = value;
     if (label == 'Questions') {
@@ -969,7 +1083,7 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
     } else if (label == 'Streak') {
       displayValue = '${_practiceStats['streak']} days';
     }
-    
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -990,10 +1104,7 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
           ),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 10,
-              color: AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 10, color: AppColors.textSecondary),
           ),
         ],
       ),
@@ -1005,13 +1116,13 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
       _isRecording = true;
       _recordingSeconds = 0;
     });
-    
+
     _recordingTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _recordingSeconds++;
       });
     });
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('🎤 Recording started... Speak your answer!'),
@@ -1025,18 +1136,21 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
     setState(() {
       _isRecording = false;
       _hasAnswered = true;
-      _confidenceScore = 0.7 + (Random().nextDouble() * 0.3); // Simulate AI analysis
+      _confidenceScore =
+          0.7 + (Random().nextDouble() * 0.3); // Simulate AI analysis
     });
-    
+
     // Simulate saving answer
     _userAnswers.add('User answer for question ${_currentQuestionIndex + 1}');
-    
+
     // Update practice stats
     setState(() {
-      _practiceStats['questionsAnswered'] = (_practiceStats['questionsAnswered'] ?? 0) + 1;
-      _practiceStats['timeSpent'] = (_practiceStats['timeSpent'] ?? 0) + (_recordingSeconds ~/ 60);
+      _practiceStats['questionsAnswered'] =
+          (_practiceStats['questionsAnswered'] ?? 0) + 1;
+      _practiceStats['timeSpent'] =
+          (_practiceStats['timeSpent'] ?? 0) + (_recordingSeconds ~/ 60);
     });
-    
+
     _showAnswerFeedback();
   }
 
@@ -1069,7 +1183,10 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
             const Text('• Detailed performance analysis'),
             const Text('• Improvement recommendations'),
             const SizedBox(height: 16),
-            const Text('Are you ready to begin?', style: TextStyle(fontWeight: FontWeight.w600)),
+            const Text(
+              'Are you ready to begin?',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
           ],
         ),
         actions: [
@@ -1088,7 +1205,7 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
       ),
     );
   }
-  
+
   void _startFullMockInterview() {
     showDialog(
       context: context,
@@ -1115,26 +1232,29 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
         ),
       ),
     );
-    
+
     // Simulate interview preparation
     Timer(const Duration(seconds: 3), () {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('🎯 Mock interview completed! Check Progress tab for results.'),
+          content: const Text(
+            '🎯 Mock interview completed! Check Progress tab for results.',
+          ),
           backgroundColor: AppColors.success,
           duration: const Duration(seconds: 3),
         ),
       );
-      
+
       // Update stats after mock interview
       setState(() {
-        _practiceStats['questionsAnswered'] = (_practiceStats['questionsAnswered'] ?? 0) + 5;
+        _practiceStats['questionsAnswered'] =
+            (_practiceStats['questionsAnswered'] ?? 0) + 5;
         _practiceStats['timeSpent'] = (_practiceStats['timeSpent'] ?? 0) + 45;
       });
     });
   }
-  
+
   void _showAnswerFeedback() {
     showDialog(
       context: context,
@@ -1151,8 +1271,11 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
                   '${(_confidenceScore * 100).toInt()}%',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: _confidenceScore > 0.8 ? AppColors.success : 
-                           _confidenceScore > 0.6 ? AppColors.warning : AppColors.error,
+                    color: _confidenceScore > 0.8
+                        ? AppColors.success
+                        : _confidenceScore > 0.6
+                        ? AppColors.warning
+                        : AppColors.error,
                   ),
                 ),
               ],
@@ -1160,14 +1283,17 @@ class _InterviewTrainingScreenState extends State<InterviewTrainingScreen>
             const SizedBox(height: 12),
             Text('Recording Duration: ${_recordingSeconds}s'),
             const SizedBox(height: 12),
-            const Text('Feedback:', style: TextStyle(fontWeight: FontWeight.w600)),
+            const Text(
+              'Feedback:',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
             const SizedBox(height: 8),
             Text(
-              _confidenceScore > 0.8 
-                ? '✅ Excellent answer! Good structure and confidence.'
-                : _confidenceScore > 0.6
-                ? '👍 Good answer. Consider adding more specific examples.'
-                : '💡 Room for improvement. Practice explaining concepts clearly.',
+              _confidenceScore > 0.8
+                  ? '✅ Excellent answer! Good structure and confidence.'
+                  : _confidenceScore > 0.6
+                  ? '👍 Good answer. Consider adding more specific examples.'
+                  : '💡 Room for improvement. Practice explaining concepts clearly.',
               style: const TextStyle(fontSize: 14),
             ),
           ],

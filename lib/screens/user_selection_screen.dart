@@ -4,8 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_app/utils/app_theme.dart';
 import 'package:flutter_app/utils/responsive_utils.dart';
 import 'package:flutter_app/providers/app_provider.dart';
-import 'dashboard_screen_simple.dart';
-import 'auth_screen.dart';
+import 'main_screens/auth_screen.dart';
 
 class UserSelectionScreen extends StatefulWidget {
   const UserSelectionScreen({super.key});
@@ -19,7 +18,7 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
-  
+
   String? _selectedUserType;
   String? _selectedCareerPath;
   String? _selectedExperience;
@@ -149,12 +148,10 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
-    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+        );
 
     _animationController.forward();
   }
@@ -166,7 +163,9 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
   }
 
   void _proceedToDashboard() {
-    if (_selectedUserType != null && _selectedCareerPath != null && _selectedExperience != null) {
+    if (_selectedUserType != null &&
+        _selectedCareerPath != null &&
+        _selectedExperience != null) {
       // Save user selections to provider
       final appProvider = Provider.of<AppProvider>(context, listen: false);
       appProvider.updateUserProfile(
@@ -178,7 +177,8 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => const DashboardScreen(),
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const DashboardScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SlideTransition(
               position: Tween<Offset>(
@@ -210,42 +210,52 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: ResponsiveUtils.getSpacing(context)),
-                    
+
                     // Header
                     _buildHeader(),
-                    
-                    SizedBox(height: ResponsiveUtils.getSpacing(context, scale: 2)),
-                    
+
+                    SizedBox(
+                      height: ResponsiveUtils.getSpacing(context, scale: 2),
+                    ),
+
                     // User Type Selection
                     _buildSectionTitle('What describes you best?'),
                     SizedBox(height: ResponsiveUtils.getSpacing(context)),
                     _buildUserTypeSelection(),
-                    
-                    SizedBox(height: ResponsiveUtils.getSpacing(context, scale: 2)),
-                    
+
+                    SizedBox(
+                      height: ResponsiveUtils.getSpacing(context, scale: 2),
+                    ),
+
                     // Career Path Selection
                     _buildSectionTitle('Which career path interests you?'),
                     SizedBox(height: ResponsiveUtils.getSpacing(context)),
                     _buildCareerPathSelection(),
-                    
-                    SizedBox(height: ResponsiveUtils.getSpacing(context, scale: 2)),
-                    
+
+                    SizedBox(
+                      height: ResponsiveUtils.getSpacing(context, scale: 2),
+                    ),
+
                     // Experience Level Selection
                     _buildSectionTitle('What\'s your experience level?'),
                     SizedBox(height: ResponsiveUtils.getSpacing(context)),
                     _buildExperienceSelection(),
-                    
-                    SizedBox(height: ResponsiveUtils.getSpacing(context, scale: 3)),
-                    
+
+                    SizedBox(
+                      height: ResponsiveUtils.getSpacing(context, scale: 3),
+                    ),
+
                     // Continue Button
                     _buildContinueButton(),
-                    
+
                     SizedBox(height: ResponsiveUtils.getSpacing(context)),
-                    
+
                     // Skip Button
                     _buildSkipButton(),
-                    
-                    SizedBox(height: ResponsiveUtils.getSpacing(context, scale: 2)),
+
+                    SizedBox(
+                      height: ResponsiveUtils.getSpacing(context, scale: 2),
+                    ),
                   ],
                 ),
               ),
@@ -263,7 +273,12 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
         Text(
           'Let\'s personalize your experience',
           style: TextStyle(
-            fontSize: ResponsiveUtils.responsiveFontSize(context, mobile: 32, tablet: 36, desktop: 40),
+            fontSize: ResponsiveUtils.responsiveFontSize(
+              context,
+              mobile: 32,
+              tablet: 36,
+              desktop: 40,
+            ),
             fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
           ),
@@ -272,7 +287,12 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
         Text(
           'Help us understand your goals so we can provide the best guidance for your career journey.',
           style: TextStyle(
-            fontSize: ResponsiveUtils.responsiveFontSize(context, mobile: 16, tablet: 18, desktop: 20),
+            fontSize: ResponsiveUtils.responsiveFontSize(
+              context,
+              mobile: 16,
+              tablet: 18,
+              desktop: 20,
+            ),
             color: AppColors.textSecondary,
             height: 1.5,
           ),
@@ -285,7 +305,12 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
     return Text(
       title,
       style: TextStyle(
-        fontSize: ResponsiveUtils.responsiveFontSize(context, mobile: 20, tablet: 22, desktop: 24),
+        fontSize: ResponsiveUtils.responsiveFontSize(
+          context,
+          mobile: 20,
+          tablet: 22,
+          desktop: 24,
+        ),
         fontWeight: FontWeight.w600,
         color: AppColors.textPrimary,
       ),
@@ -295,10 +320,16 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
   Widget _buildUserTypeSelection() {
     return ResponsiveUtils.isMobile(context)
         ? Column(
-            children: _userTypes.map((userType) => Padding(
-              padding: EdgeInsets.only(bottom: ResponsiveUtils.getSpacing(context, scale: 0.75)),
-              child: _buildUserTypeCard(userType),
-            )).toList(),
+            children: _userTypes
+                .map(
+                  (userType) => Padding(
+                    padding: EdgeInsets.only(
+                      bottom: ResponsiveUtils.getSpacing(context, scale: 0.75),
+                    ),
+                    child: _buildUserTypeCard(userType),
+                  ),
+                )
+                .toList(),
           )
         : GridView.builder(
             shrinkWrap: true,
@@ -310,13 +341,14 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
               childAspectRatio: 1.2,
             ),
             itemCount: _userTypes.length,
-            itemBuilder: (context, index) => _buildUserTypeCard(_userTypes[index]),
+            itemBuilder: (context, index) =>
+                _buildUserTypeCard(_userTypes[index]),
           );
   }
 
   Widget _buildUserTypeCard(UserTypeOption userType) {
     final isSelected = _selectedUserType == userType.id;
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -327,19 +359,35 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
         duration: const Duration(milliseconds: 300),
         padding: ResponsiveUtils.responsivePadding(context),
         decoration: BoxDecoration(
-          color: isSelected ? Color.fromARGB(26, userType.color.red, userType.color.green, userType.color.blue) : AppColors.surface,
-          borderRadius: BorderRadius.circular(ResponsiveUtils.getBorderRadius(context)),
+          color: isSelected
+              ? Color.fromARGB(
+                  26,
+                  userType.color.red,
+                  userType.color.green,
+                  userType.color.blue,
+                )
+              : AppColors.surface,
+          borderRadius: BorderRadius.circular(
+            ResponsiveUtils.getBorderRadius(context),
+          ),
           border: Border.all(
             color: isSelected ? userType.color : AppColors.border,
             width: isSelected ? 2 : 1,
           ),
-          boxShadow: isSelected ? [
-            BoxShadow(
-              color: Color.fromARGB(51, userType.color.red, userType.color.green, userType.color.blue),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ] : AppShadows.small,
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: Color.fromARGB(
+                      51,
+                      userType.color.red,
+                      userType.color.green,
+                      userType.color.blue,
+                    ),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : AppShadows.small,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -348,8 +396,15 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
               width: ResponsiveUtils.getIconSize(context) * 1.5,
               height: ResponsiveUtils.getIconSize(context) * 1.5,
               decoration: BoxDecoration(
-                color: Color.fromARGB(51, userType.color.red, userType.color.green, userType.color.blue),
-                borderRadius: BorderRadius.circular(ResponsiveUtils.getBorderRadius(context)),
+                color: Color.fromARGB(
+                  51,
+                  userType.color.red,
+                  userType.color.green,
+                  userType.color.blue,
+                ),
+                borderRadius: BorderRadius.circular(
+                  ResponsiveUtils.getBorderRadius(context),
+                ),
               ),
               child: Icon(
                 userType.icon,
@@ -361,7 +416,10 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
             Text(
               userType.title,
               style: TextStyle(
-                fontSize: ResponsiveUtils.responsiveFontSize(context, mobile: 18),
+                fontSize: ResponsiveUtils.responsiveFontSize(
+                  context,
+                  mobile: 18,
+                ),
                 fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,
               ),
@@ -370,7 +428,10 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
             Text(
               userType.subtitle,
               style: TextStyle(
-                fontSize: ResponsiveUtils.responsiveFontSize(context, mobile: 14),
+                fontSize: ResponsiveUtils.responsiveFontSize(
+                  context,
+                  mobile: 14,
+                ),
                 color: AppColors.textSecondary,
               ),
             ),
@@ -385,19 +446,30 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: ResponsiveUtils.responsive(context, mobile: 1, tablet: 2, desktop: 3),
+        crossAxisCount: ResponsiveUtils.responsive(
+          context,
+          mobile: 1,
+          tablet: 2,
+          desktop: 3,
+        ),
         crossAxisSpacing: ResponsiveUtils.getSpacing(context),
         mainAxisSpacing: ResponsiveUtils.getSpacing(context),
-        childAspectRatio: ResponsiveUtils.responsive(context, mobile: 2.5, tablet: 1.8, desktop: 1.5),
+        childAspectRatio: ResponsiveUtils.responsive(
+          context,
+          mobile: 2.5,
+          tablet: 1.8,
+          desktop: 1.5,
+        ),
       ),
       itemCount: _careerPaths.length,
-      itemBuilder: (context, index) => _buildCareerPathCard(_careerPaths[index]),
+      itemBuilder: (context, index) =>
+          _buildCareerPathCard(_careerPaths[index]),
     );
   }
 
   Widget _buildCareerPathCard(CareerPathOption careerPath) {
     final isSelected = _selectedCareerPath == careerPath.id;
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -409,7 +481,9 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
         decoration: BoxDecoration(
           gradient: isSelected ? careerPath.gradient : null,
           color: !isSelected ? AppColors.surface : null,
-          borderRadius: BorderRadius.circular(ResponsiveUtils.getBorderRadius(context)),
+          borderRadius: BorderRadius.circular(
+            ResponsiveUtils.getBorderRadius(context),
+          ),
           border: Border.all(
             color: isSelected ? Colors.transparent : AppColors.border,
             width: 1,
@@ -430,17 +504,27 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
               Text(
                 careerPath.title,
                 style: TextStyle(
-                  fontSize: ResponsiveUtils.responsiveFontSize(context, mobile: 16),
+                  fontSize: ResponsiveUtils.responsiveFontSize(
+                    context,
+                    mobile: 16,
+                  ),
                   fontWeight: FontWeight.w600,
                   color: isSelected ? Colors.white : AppColors.textPrimary,
                 ),
               ),
-              SizedBox(height: ResponsiveUtils.getSpacing(context, scale: 0.25)),
+              SizedBox(
+                height: ResponsiveUtils.getSpacing(context, scale: 0.25),
+              ),
               Text(
                 careerPath.subtitle,
                 style: TextStyle(
-                  fontSize: ResponsiveUtils.responsiveFontSize(context, mobile: 12),
-                  color: isSelected ? const Color(0xE6FFFFFF) : AppColors.textSecondary,
+                  fontSize: ResponsiveUtils.responsiveFontSize(
+                    context,
+                    mobile: 12,
+                  ),
+                  color: isSelected
+                      ? const Color(0xE6FFFFFF)
+                      : AppColors.textSecondary,
                 ),
               ),
             ],
@@ -456,7 +540,9 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
         final isSelected = _selectedExperience == experience.id;
         return Expanded(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveUtils.getSpacing(context, scale: 0.25)),
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveUtils.getSpacing(context, scale: 0.25),
+            ),
             child: GestureDetector(
               onTap: () {
                 setState(() {
@@ -467,8 +553,12 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
                 duration: const Duration(milliseconds: 300),
                 padding: ResponsiveUtils.responsivePadding(context),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0x1A2563EB) : AppColors.surface,
-                  borderRadius: BorderRadius.circular(ResponsiveUtils.getBorderRadius(context)),
+                  color: isSelected
+                      ? const Color(0x1A2563EB)
+                      : AppColors.surface,
+                  borderRadius: BorderRadius.circular(
+                    ResponsiveUtils.getBorderRadius(context),
+                  ),
                   border: Border.all(
                     color: isSelected ? AppColors.primary : AppColors.border,
                     width: isSelected ? 2 : 1,
@@ -478,24 +568,38 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
                   children: [
                     Icon(
                       experience.icon,
-                      color: isSelected ? AppColors.primary : AppColors.textSecondary,
+                      color: isSelected
+                          ? AppColors.primary
+                          : AppColors.textSecondary,
                       size: ResponsiveUtils.getIconSize(context),
                     ),
-                    SizedBox(height: ResponsiveUtils.getSpacing(context, scale: 0.5)),
+                    SizedBox(
+                      height: ResponsiveUtils.getSpacing(context, scale: 0.5),
+                    ),
                     Text(
                       experience.title,
                       style: TextStyle(
-                        fontSize: ResponsiveUtils.responsiveFontSize(context, mobile: 14),
+                        fontSize: ResponsiveUtils.responsiveFontSize(
+                          context,
+                          mobile: 14,
+                        ),
                         fontWeight: FontWeight.w600,
-                        color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                        color: isSelected
+                            ? AppColors.primary
+                            : AppColors.textPrimary,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: ResponsiveUtils.getSpacing(context, scale: 0.25)),
+                    SizedBox(
+                      height: ResponsiveUtils.getSpacing(context, scale: 0.25),
+                    ),
                     Text(
                       experience.subtitle,
                       style: TextStyle(
-                        fontSize: ResponsiveUtils.responsiveFontSize(context, mobile: 12),
+                        fontSize: ResponsiveUtils.responsiveFontSize(
+                          context,
+                          mobile: 12,
+                        ),
                         color: AppColors.textSecondary,
                       ),
                       textAlign: TextAlign.center,
@@ -511,8 +615,11 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
   }
 
   Widget _buildContinueButton() {
-    final isEnabled = _selectedUserType != null && _selectedCareerPath != null && _selectedExperience != null;
-    
+    final isEnabled =
+        _selectedUserType != null &&
+        _selectedCareerPath != null &&
+        _selectedExperience != null;
+
     return SizedBox(
       width: double.infinity,
       height: ResponsiveUtils.getButtonHeight(context),
@@ -524,7 +631,9 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
           elevation: isEnabled ? 8 : 0,
           shadowColor: const Color(0x662563EB),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(ResponsiveUtils.getBorderRadius(context)),
+            borderRadius: BorderRadius.circular(
+              ResponsiveUtils.getBorderRadius(context),
+            ),
           ),
         ),
         child: Text(
