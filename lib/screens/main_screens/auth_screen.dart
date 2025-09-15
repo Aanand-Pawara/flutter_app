@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/main.dart';
-import 'package:flutter_app/screens/main_screens/home_screens/enhanced_dashboard_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_app/providers/app_provider.dart';
 import 'package:flutter_app/utils/app_theme.dart';
 import 'career_selection_screen.dart';
-import '../home_screen.dart';
 
 /// Enhanced language provider with 4 languages
 class LanguageProvider extends ChangeNotifier {

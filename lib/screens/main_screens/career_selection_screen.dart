@@ -3,7 +3,6 @@ import 'package:flutter_app/main.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_app/providers/app_provider.dart';
 import 'package:flutter_app/utils/app_theme.dart';
-import '../home_screen.dart';
 
 class CareerSelectionScreen extends StatefulWidget {
   const CareerSelectionScreen({super.key});
