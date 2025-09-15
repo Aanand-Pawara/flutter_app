@@ -1,215 +1,373 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/UI.dart';
-import 'package:flutter_app/apptheme.dart';
-import 'package:flutter_app/component/dropdown.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_app/providers/app_provider.dart';
+import 'package:flutter_app/utils/app_theme.dart';
+import 'package:flutter_app/screens/onboarding_screen.dart';
+import 'package:flutter_app/screens/career_selection_screen.dart';
+import 'package:flutter_app/screens/dashboard_screen_simple.dart';
+import 'package:flutter_app/screens/enhanced_login_screen.dart';
+import 'package:flutter_app/screens/enhanced_dashboard_screen.dart';
+import 'package:flutter_app/screens/ai_mentor_chat_screen.dart';
+import 'package:flutter_app/screens/profile_screen.dart';
+import 'package:flutter_app/screens/enhanced_resources_screen.dart';
+import 'package:flutter_app/screens/enhanced_resume_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const OSCARCareerApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class OSCARCareerApp extends StatelessWidget {
+  const OSCARCareerApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const SignUpScreen(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AppProvider()),
+      ],
+      child: MaterialApp(
+        title: 'OSCAR - Career Guidance Platform',
+        theme: AppTheme.lightTheme,
+        home: const AppNavigator(),
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class AppNavigator extends StatelessWidget {
+  const AppNavigator({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  Widget build(BuildContext context) {
+    return Consumer<AppProvider>(
+      builder: (context, appProvider, child) {
+        if (!appProvider.hasSeenOnboarding) {
+          return const OnboardingScreen();
+        }
+        
+        if (!appProvider.isAuthenticated) {
+          return const EnhancedLoginScreen();
+        }
+        
+        if (appProvider.selectedCareerPath == null) {
+          return const CareerSelectionScreen();
+        }
+        
+        return const MainDashboard();
+      },
+    );
+  }
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
-  String selectedLang = "English";
+class MainDashboard extends StatefulWidget {
+  const MainDashboard({super.key});
 
-  final TextEditingController emailCtrl = TextEditingController();
-  final TextEditingController passwordCtrl = TextEditingController();
-  final TextEditingController confirmCtrl = TextEditingController();
+  @override
+  State<MainDashboard> createState() => _MainDashboardState();
+}
+
+class _MainDashboardState extends State<MainDashboard> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _pages = [
+    const EnhancedDashboardScreen(),
+    const EnhancedResourcesScreen(),
+    const AIMentorChatScreen(),
+    const EnhancedResumeScreen(),
+    const ProfileScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Center(
-                    child: UIComponents.createText(
-                      AppTheme.Slogan,
-                      fontFamily: "Outfit",
-                      withShadow: true,
-                      gradient: AppTheme.primaryGradient,
-                    ),
-                  ),
-                ),
-
-                // RIGHT: form
-                Expanded(flex: 3, child: _buildSignUpPanel()),
-              ],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, -5),
             ),
-
-            // bottom-left language dropdown
-            Positioned(
-              left: 20,
-              bottom: 20,
-              child: LanguageDropdown(
-                options: ["English", "हिन्दी", "मराठी", "اردو"],
-                initialValue: selectedLang,
-                onChanged: (value) {
-                  setState(() {
-                    selectedLang = value;
-                  });
-                },
-              ),
-            )
+          ],
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _selectedIndex,
+          onTap: (index) => setState(() => _selectedIndex = index),
+          backgroundColor: Colors.white,
+          selectedItemColor: AppColors.primary,
+          unselectedItemColor: AppColors.textTertiary,
+          selectedFontSize: 12,
+          unselectedFontSize: 10,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard_rounded),
+              activeIcon: Icon(Icons.dashboard),
+              label: 'Dashboard',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.library_books_rounded),
+              activeIcon: Icon(Icons.library_books),
+              label: 'Resources',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.psychology_rounded),
+              activeIcon: Icon(Icons.psychology),
+              label: 'AI Mentor',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.description_rounded),
+              activeIcon: Icon(Icons.description),
+              label: 'Resume',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_rounded),
+              activeIcon: Icon(Icons.person),
+              label: 'Profile',
+            ),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildSignUpPanel() {
-    bool termsAccepted = false; // move to State for actual toggle
+// Placeholder screens - will be implemented next
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 12,
-            offset: Offset(4, 6),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          UIComponents.createText(
-            "Sign In",
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            withShadow: true,
-            gradient: AppTheme.primaryGradient,
-          ),
-          const SizedBox(height: 16),
-          UIComponents.buildGradientTextField(
-            "Email",
-            emailCtrl,
-            Icons.email,
-            borderGradient: AppTheme.primaryGradient,
-            iconGradient: AppTheme.primaryGradient,
-          ),
-          const SizedBox(height: 12),
-          UIComponents.buildGradientTextField(
-            "Password",
-            passwordCtrl,
-            Icons.lock,
-            borderGradient: AppTheme.primaryGradient,
-            iconGradient: AppTheme.primaryGradient,
-          ),
-          const SizedBox(height: 12),
-          UIComponents.buildGradientTextField(
-            "Confirm Password",
-            confirmCtrl,
-            Icons.lock_outline,
-            borderGradient: AppTheme.primaryGradient,
-            iconGradient: AppTheme.primaryGradient,
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              StatefulBuilder(
-                builder: (context, setLocalState) {
-                  return Checkbox(
-                    value: termsAccepted,
-                    onChanged: (val) {
-                      setLocalState(() => termsAccepted = val!);
-                    },
-                    activeColor: Colors.deepPurple,
-                  );
-                },
-              ),
-              Expanded(
-                child: Text(
-                  "I accept the Terms and Conditions",
-                  style: TextStyle(fontSize: 14, fontFamily: "Outfit"),
-                ),
-              ),
+
+
+
+
+
+
+
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Center(child: Text('Profile Screen - Coming Soon'));
+}
+
+
+
+class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
+
+  @override
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  final List<OnboardingPage> _pages = [
+    OnboardingPage(
+      title: 'Welcome to OSCAR',
+      subtitle: 'Your AI-powered career guidance companion for rural students',
+      description: 'Access technology knowledge, career paths, and opportunities designed specifically for students from rural backgrounds.',
+      icon: Icons.school,
+      color: const Color(0xFF2563EB),
+    ),
+    OnboardingPage(
+      title: 'Multiple Career Paths',
+      subtitle: 'Explore diverse career opportunities across all fields',
+      description: 'From technology to government jobs, discover paths that match your interests and local opportunities.',
+      icon: Icons.explore,
+      color: const Color(0xFF059669),
+    ),
+    OnboardingPage(
+      title: 'Multilingual AI Mentor',
+      subtitle: 'Get guidance in your preferred language',
+      description: 'Our AI mentor speaks your language and understands your local context to provide personalized advice.',
+      icon: Icons.psychology,
+      color: const Color(0xFF8B5CF6),
+    ),
+    OnboardingPage(
+      title: 'Scholarships & Resources',
+      subtitle: 'Access funding and learning materials',
+      description: 'Find scholarships, free courses, and resources to support your educational journey.',
+      icon: Icons.card_giftcard,
+      color: const Color(0xFFEA580C),
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              _pages[_currentPage].color,
+              _pages[_currentPage].color.withOpacity(0.8),
             ],
           ),
-          const SizedBox(height: 16),
-          Row(
+        ),
+        child: SafeArea(
+          child: Column(
             children: [
               Expanded(
-                child: UIComponents.buildModernButton(
-                  "Sign In",
-                  bgGradient: AppTheme.primaryGradient,
-                  onPressed: () {},
+                child: PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentPage = index;
+                    });
+                  },
+                  itemCount: _pages.length,
+                  itemBuilder: (context, index) {
+                    return _buildPage(_pages[index]);
+                  },
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: InkWell(
-                  onTap: () {},
-                  borderRadius: BorderRadius.circular(16),
-                  child: Container(
-                    height: 55,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey.shade300),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 5,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
+              
+              // Page indicators
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    _pages.length,
+                    (index) => AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      height: 8,
+                      width: _currentPage == index ? 24 : 8,
+                      decoration: BoxDecoration(
+                        color: _currentPage == index
+                            ? Colors.white
+                            : Colors.white.withOpacity(0.4),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            "Google",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Image.asset(
-                          "assets/images/google_logo.png",
-                          width: 24,
-                          height: 24,
-                        ),
-                      ],
+                  ),
+                ),
+              ),
+              
+              // Next/Get Started button
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_currentPage < _pages.length - 1) {
+                        _pageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      } else {
+                        final appProvider = Provider.of<AppProvider>(context, listen: false);
+                        appProvider.completeOnboarding();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: _pages[_currentPage].color,
+                      elevation: 8,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Text(
+                      _currentPage < _pages.length - 1 ? 'Next' : 'Get Started',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPage(OnboardingPage page) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Icon(
+              page.icon,
+              size: 60,
+              color: Colors.white,
+            ),
+          ),
+          
+          const SizedBox(height: 40),
+          
+          Text(
+            page.title,
+            style: const TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          
+          const SizedBox(height: 16),
+          
+          Text(
+            page.subtitle,
+            style: const TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+              height: 1.4,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          
+          const SizedBox(height: 24),
+          
+          Text(
+            page.description,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.white.withOpacity(0.8),
+              height: 1.5,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );
   }
 }
+
+class OnboardingPage {
+  final String title;
+  final String subtitle;
+  final String description;
+  final IconData icon;
+  final Color color;
+
+  OnboardingPage({
+    required this.title,
+    required this.subtitle,
+    required this.description,
+    required this.icon,
+    required this.color,
+  });
+}
+
