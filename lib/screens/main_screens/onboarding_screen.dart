@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/widgets/animated_gradient_background.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_app/providers/app_provider.dart';
 import 'package:flutter_app/utils/app_theme.dart';
@@ -19,27 +20,32 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
+  // Update the _pages list initialization:
+
   final List<OnboardingPage> _pages = [
     OnboardingPage(
       title: "Discover Your Path",
       description:
           "Explore endless career possibilities with AI-powered guidance tailored just for you",
       icon: Icons.explore,
-      color: AppColors.primary,
+      color1: AppColors.primary,
+      color2: const Color(0xFF6B8FF7), // Lighter blue
     ),
     OnboardingPage(
       title: "Build Your Skills",
       description:
           "Access curated learning resources and track your progress towards your dream career",
       icon: Icons.build,
-      color: AppColors.secondary,
+      color1: AppColors.secondary,
+      color2: const Color(0xFF4ECDC4), // Teal
     ),
     OnboardingPage(
       title: "Achieve Your Goals",
       description:
           "Get personalized recommendations and celebrate every milestone on your journey",
       icon: Icons.emoji_events,
-      color: AppColors.accent,
+      color1: AppColors.accent,
+      color2: const Color(0xFFFFA07A), // Light salmon
     ),
   ];
 
@@ -100,7 +106,22 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
+      body: AnimatedGradientBackground(
+        colors: [
+          _pages[_currentPage].color1,
+          Color.lerp(
+            _pages[_currentPage].color1,
+            _pages[_currentPage].color2,
+            0.5,
+          )!,
+          _pages[_currentPage].color2,
+          Color.lerp(
+            _pages[_currentPage].color2,
+            _pages[_currentPage].color1,
+            0.5,
+          )!,
+        ],
+        duration: const Duration(seconds: 5),
         child: Column(
           children: [
             // Skip Button
@@ -267,12 +288,13 @@ class OnboardingPage {
   final String title;
   final String description;
   final IconData icon;
-  final Color color;
+  final Color color1, color2;
 
   OnboardingPage({
     required this.title,
     required this.description,
     required this.icon,
-    required this.color,
+    required this.color1,
+    required this.color2,
   });
 }

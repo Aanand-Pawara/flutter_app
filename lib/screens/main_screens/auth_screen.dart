@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/main.dart';
+import 'package:flutter_app/screens/main_screens/forgot_password_screen.dart';
+import 'package:flutter_app/widgets/animated_gradient_background.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_app/providers/app_provider.dart';
 import 'package:flutter_app/utils/app_theme.dart';
@@ -168,7 +170,8 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
   bool _isLoading = false;
-  bool _acceptTerms = false;
+  final bool _acceptTerms = false;
+  bool _isForgotPassword = false;
 
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
@@ -231,6 +234,63 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
     setState(() => _isLogin = !_isLogin);
     _slideController.reset();
     _slideController.forward();
+  }
+
+  // Add to _AuthScreenState class
+  void _toggleForgotPassword() {
+    setState(() {
+      _isForgotPassword = !_isForgotPassword;
+      if (_isForgotPassword) {
+        _isLogin = true;
+      }
+    });
+    _slideController.reset();
+    _slideController.forward();
+
+    // Clear fields when toggling
+    if (_isForgotPassword) {
+      _passwordController.clear();
+      _confirmController.clear();
+    }
+  }
+
+  // Add to _AuthScreenState class
+  Future<void> _submitForgotPassword() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+    print('Attempting password reset for: ${_emailController.text.trim()}');
+
+    try {
+      await Provider.of<AppProvider>(
+        context,
+        listen: false,
+      ).resetPassword(_emailController.text.trim());
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Password reset email sent! Check your inbox.'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        _toggleForgotPassword(); // Return to login
+      }
+    } catch (e) {
+      print('Password reset failed: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: AppColors.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
+
+    if (mounted) setState(() => _isLoading = false);
   }
 
   Future<void> _submitForm() async {
@@ -309,38 +369,11 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
     return Directionality(
       textDirection: lang.isRTL ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
-        body: AnimatedBuilder(
-          animation: _gradientController,
-          builder: (context, _) {
-            return Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    AppColors.primary,
-                    Color.lerp(
-                      AppColors.primary,
-                      AppColors.accent,
-                      _gradientController.value,
-                    )!,
-                    Color.lerp(
-                      AppColors.accent,
-                      AppColors.primaryDark,
-                      (_gradientController.value + 0.3).clamp(0.0, 1.0),
-                    )!,
-                    AppColors.primaryDark,
-                  ],
-                  stops: const [0.0, 0.3, 0.7, 1.0],
-                ),
-              ),
-              child: SafeArea(
-                child: _buildResponsiveLayout(lang, isWideScreen, isTablet),
-              ),
-            );
-          },
+        body: AnimatedGradientBackground(
+          child: SafeArea(
+            child: _buildResponsiveLayout(lang, isWideScreen, isTablet),
+          ),
         ),
-        // bottomNavigationBar: _buildLanguageSelector(context),
       ),
     );
   }
@@ -573,7 +606,6 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                 color: Colors.black.withOpacity(0.1),
                 blurRadius: 30,
                 offset: const Offset(0, 15),
-                spreadRadius: 0,
               ),
             ],
           ),
@@ -582,207 +614,224 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  _isLogin ? lang.t('title') : lang.t('createAccount'),
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  lang.t('subtitle'),
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
+                _buildHeader(lang),
                 const SizedBox(height: 32),
-
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  child: Column(
-                    children: [
-                      if (!_isLogin) ...[
-                        _buildTextField(
-                          controller: _nameController,
-                          label: lang.t('name'),
-                          icon: Icons.person_outline,
-                          validator: (v) => (v?.trim().isEmpty ?? true)
-                              ? lang.t('enterName')
-                              : null,
-                        ),
-                        const SizedBox(height: 20),
-                      ],
-
-                      _buildTextField(
-                        controller: _emailController,
-                        label: lang.t('email'),
-                        icon: Icons.email_outlined,
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (v) {
-                          if (v?.trim().isEmpty ?? true)
-                            return lang.t('enterEmail');
-                          if (!RegExp(
-                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                          ).hasMatch(v!.trim())) {
-                            return lang.t('invalidEmail');
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-
-                      _buildTextField(
-                        controller: _passwordController,
-                        label: lang.t('password'),
-                        icon: Icons.lock_outline,
-                        obscureText: !_isPasswordVisible,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isPasswordVisible
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility_outlined,
-                            color: AppColors.textSecondary,
-                          ),
-                          onPressed: () => setState(
-                            () => _isPasswordVisible = !_isPasswordVisible,
-                          ),
-                        ),
-                        validator: (v) {
-                          if (v?.isEmpty ?? true)
-                            return lang.t('enterPassword');
-                          if ((v?.length ?? 0) < 6)
-                            return lang.t('passwordTooShort');
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-
-                      if (!_isLogin) ...[
-                        _buildTextField(
-                          controller: _confirmController,
-                          label: lang.t('confirm'),
-                          icon: Icons.lock_outline,
-                          obscureText: !_isConfirmPasswordVisible,
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _isConfirmPasswordVisible
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility_outlined,
-                              color: AppColors.textSecondary,
-                            ),
-                            onPressed: () => setState(
-                              () => _isConfirmPasswordVisible =
-                                  !_isConfirmPasswordVisible,
-                            ),
-                          ),
-                          validator: (v) => v != _passwordController.text
-                              ? lang.t('passwordsDontMatch')
-                              : null,
-                        ),
-                        const SizedBox(height: 20),
-                      ],
-                    ],
-                  ),
-                ),
-
-                if (_isLogin) ...[
-                  Align(
-                    alignment: lang.isRTL
-                        ? Alignment.centerLeft
-                        : Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        lang.t('forgotPassword'),
-                        style: TextStyle(
-                          color: AppColors.accent,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ] else ...[
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: _acceptTerms,
-                        onChanged: (value) =>
-                            setState(() => _acceptTerms = value ?? false),
-                        activeColor: AppColors.accent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          lang.t('terms'),
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-
+                _buildFormFields(lang),
+                const SizedBox(height: 20),
+                _buildForgotPasswordButton(lang),
                 const SizedBox(height: 32),
-
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _submitForm,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.accent,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: _isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                        : Text(
-                            _isLogin ? lang.t('signin') : lang.t('signup'),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                  ),
-                ),
-
+                _buildSubmitButton(lang),
                 const SizedBox(height: 24),
-
-                TextButton(
-                  onPressed: _toggleAuthMode,
-                  child: Text(
-                    _isLogin
-                        ? lang.t('toggleToSignUp')
-                        : lang.t('toggleToSignIn'),
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
+                _buildToggleButtons(lang),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildHeader(LanguageProvider lang) {
+    return Column(
+      children: [
+        Text(
+          _isForgotPassword
+              ? 'Reset Password'
+              : _isLogin
+              ? lang.t('title')
+              : lang.t('createAccount'),
+          style: const TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          _isForgotPassword
+              ? 'Enter your email to reset your password'
+              : lang.t('subtitle'),
+          style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFormFields(LanguageProvider lang) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      child: Column(
+        children: [
+          if (!_isLogin && !_isForgotPassword) ...[
+            _buildTextField(
+              controller: _nameController,
+              label: lang.t('name'),
+              icon: Icons.person_outline,
+              validator: (v) =>
+                  (v?.trim().isEmpty ?? true) ? lang.t('enterName') : null,
+            ),
+            const SizedBox(height: 20),
+          ],
+          _buildTextField(
+            controller: _emailController,
+            label: lang.t('email'),
+            icon: Icons.email_outlined,
+            keyboardType: TextInputType.emailAddress,
+            validator: _validateEmail,
+          ),
+          if (!_isForgotPassword) ...[
+            const SizedBox(height: 20),
+            _buildTextField(
+              controller: _passwordController,
+              label: lang.t('password'),
+              icon: Icons.lock_outline,
+              obscureText: !_isPasswordVisible,
+              suffixIcon: _buildPasswordVisibilityToggle(
+                _isPasswordVisible,
+                () {
+                  setState(() => _isPasswordVisible = !_isPasswordVisible);
+                },
+              ),
+              validator: (v) => _validatePassword(v, lang),
+            ),
+            if (!_isLogin) ...[
+              const SizedBox(height: 20),
+              _buildTextField(
+                controller: _confirmController,
+                label: lang.t('confirm'),
+                icon: Icons.lock_outline,
+                obscureText: !_isConfirmPasswordVisible,
+                suffixIcon: _buildPasswordVisibilityToggle(
+                  _isConfirmPasswordVisible,
+                  () {
+                    setState(
+                      () => _isConfirmPasswordVisible =
+                          !_isConfirmPasswordVisible,
+                    );
+                  },
+                ),
+                validator: (v) => v != _passwordController.text
+                    ? lang.t('passwordsDontMatch')
+                    : null,
+              ),
+            ],
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildForgotPasswordButton(LanguageProvider lang) {
+    if (!_isLogin || _isForgotPassword) return const SizedBox.shrink();
+
+    return Align(
+      alignment: lang.isRTL ? Alignment.centerLeft : Alignment.centerRight,
+      child: TextButton(
+        onPressed: _toggleForgotPassword,
+        child: Text(
+          lang.t('forgotPassword'),
+          style: const TextStyle(
+            color: AppColors.accent,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton(LanguageProvider lang) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: _isLoading
+            ? null
+            : () {
+                print(
+                  'Submitting form: ${_isForgotPassword ? 'Reset Password' : (_isLogin ? 'Login' : 'Sign Up')}',
+                );
+                _isForgotPassword ? _submitForgotPassword() : _submitForm();
+              },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.accent,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 0,
+        ),
+        child: _isLoading
+            ? const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2,
+                ),
+              )
+            : Text(
+                _isForgotPassword
+                    ? 'Reset Password'
+                    : _isLogin
+                    ? lang.t('signin')
+                    : lang.t('signup'),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+      ),
+    );
+  }
+
+  Widget _buildToggleButtons(LanguageProvider lang) {
+    return TextButton(
+      onPressed: _isForgotPassword ? _toggleForgotPassword : _toggleAuthMode,
+      child: Text(
+        _isForgotPassword
+            ? 'Back to Login'
+            : _isLogin
+            ? lang.t('toggleToSignUp')
+            : lang.t('toggleToSignIn'),
+        style: const TextStyle(
+          color: AppColors.textSecondary,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordVisibilityToggle(
+    bool isVisible,
+    VoidCallback onPressed,
+  ) {
+    return IconButton(
+      icon: Icon(
+        isVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+        color: AppColors.textSecondary,
+      ),
+      onPressed: onPressed,
+    );
+  }
+
+  String? _validateEmail(String? value) {
+    if (value?.trim().isEmpty ?? true) {
+      return 'Please enter your email';
+    }
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value!.trim())) {
+      return 'Please enter a valid email';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value, LanguageProvider lang) {
+    if (value?.isEmpty ?? true) {
+      return lang.t('enterPassword');
+    }
+    if ((value?.length ?? 0) < 6) {
+      return lang.t('passwordTooShort');
+    }
+    return null;
   }
 
   Widget _buildTextField({

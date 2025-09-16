@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/firebase_service.dart';
 import 'package:flutter_app/screens/main_screens/auth_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_app/providers/app_provider.dart';
@@ -9,7 +10,9 @@ import 'package:flutter_app/screens/main_screens/home_screens/ai_mentor_chat_scr
 import 'package:flutter_app/screens/main_screens/home_screens/enhanced_resources_screen.dart';
 import 'package:flutter_app/screens/main_screens/home_screens/enhanced_resume_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FirebaseService.instance.init();
   runApp(const OSCARCareerApp());
 }
 
@@ -21,9 +24,7 @@ class OSCARCareerApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AppProvider()),
-        ChangeNotifierProvider(
-          create: (_) => LanguageProvider(),
-        ), // 👈 missing one
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
       ],
       child: MaterialApp(
         title: 'OSCAR - Career Guidance Platform',

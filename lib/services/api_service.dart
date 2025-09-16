@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as html_parser;
 import 'package:flutter_app/models/scholarship.dart';
@@ -12,7 +11,7 @@ class ApiService {
   static const String _adzunaAppId = 'YOUR_ADZUNA_APP_ID';
   static const String _youtubeApiKey = 'YOUR_YOUTUBE_API_KEY';
   static const String _googleMapsApiKey = 'YOUR_GOOGLE_MAPS_API_KEY';
-  
+
   static final ApiService _instance = ApiService._internal();
   factory ApiService() => _instance;
   ApiService._internal();
@@ -21,7 +20,7 @@ class ApiService {
   static const Duration _timeout = Duration(seconds: 30);
 
   // ============ SCHOLARSHIP SERVICES ============
-  
+
   /// Scrapes National Scholarship Portal for active scholarships
   Future<List<Scholarship>> getNSPScholarships({
     String? category,
@@ -31,18 +30,24 @@ class ApiService {
     try {
       const String nspUrl = 'https://scholarships.gov.in/schemeFullDetails.do';
       final response = await _client.get(Uri.parse(nspUrl)).timeout(_timeout);
-      
+
       if (response.statusCode == 200) {
         final document = html_parser.parse(response.body);
-        final scholarshipElements = document.querySelectorAll('.scholarship-card');
-        
+        final scholarshipElements = document.querySelectorAll(
+          '.scholarship-card',
+        );
+
         return scholarshipElements.map((element) {
-          final title = element.querySelector('.scheme-name')?.text?.trim() ?? '';
-          final description = element.querySelector('.scheme-desc')?.text?.trim() ?? '';
-          final deadline = element.querySelector('.deadline')?.text?.trim() ?? '';
-          final amount = element.querySelector('.amount')?.text?.trim() ?? '';
-          final eligibility = element.querySelector('.eligibility')?.text?.trim() ?? '';
-          
+          final title =
+              element.querySelector('.scheme-name')?.text.trim() ?? '';
+          final description =
+              element.querySelector('.scheme-desc')?.text.trim() ?? '';
+          final deadline =
+              element.querySelector('.deadline')?.text.trim() ?? '';
+          final amount = element.querySelector('.amount')?.text.trim() ?? '';
+          final eligibility =
+              element.querySelector('.eligibility')?.text.trim() ?? '';
+
           return Scholarship(
             id: title.hashCode.toString(),
             title: title,
@@ -53,12 +58,13 @@ class ApiService {
             source: 'National Scholarship Portal',
             category: category ?? 'General',
             state: state,
-            applicationUrl: 'https://scholarships.gov.in/fresh/newstdRegfrmInstruction',
+            applicationUrl:
+                'https://scholarships.gov.in/fresh/newstdRegfrmInstruction',
             isActive: true,
           );
         }).toList();
       }
-      
+
       return _getFallbackScholarships();
     } catch (e) {
       // Error scraping NSP scholarships
@@ -67,7 +73,7 @@ class ApiService {
   }
 
   // ============ JOB SERVICES ============
-  
+
   /// Fetches jobs from National Career Service (NCS)
   Future<List<Job>> getNCSJobs({
     String? location,
@@ -77,18 +83,21 @@ class ApiService {
     try {
       const String ncsUrl = 'https://www.ncs.gov.in/Pages/default.aspx';
       final response = await _client.get(Uri.parse(ncsUrl)).timeout(_timeout);
-      
+
       if (response.statusCode == 200) {
         final document = html_parser.parse(response.body);
         final jobElements = document.querySelectorAll('.job-listing');
-        
+
         return jobElements.map((element) {
-          final title = element.querySelector('.job-title')?.text?.trim() ?? '';
-          final company = element.querySelector('.company-name')?.text?.trim() ?? '';
-          final jobLocation = element.querySelector('.location')?.text?.trim() ?? '';
-          final salary = element.querySelector('.salary')?.text?.trim() ?? '';
-          final experience = element.querySelector('.experience')?.text?.trim() ?? '';
-          
+          final title = element.querySelector('.job-title')?.text.trim() ?? '';
+          final company =
+              element.querySelector('.company-name')?.text.trim() ?? '';
+          final jobLocation =
+              element.querySelector('.location')?.text.trim() ?? '';
+          final salary = element.querySelector('.salary')?.text.trim() ?? '';
+          final experience =
+              element.querySelector('.experience')?.text.trim() ?? '';
+
           return Job(
             id: title.hashCode.toString(),
             title: title,
@@ -96,7 +105,8 @@ class ApiService {
             location: jobLocation,
             salary: salary,
             experience: experience,
-            description: 'Government job opportunity through National Career Service',
+            description:
+                'Government job opportunity through National Career Service',
             requirements: [],
             postedDate: DateTime.now(),
             applicationUrl: 'https://www.ncs.gov.in/',
@@ -105,14 +115,14 @@ class ApiService {
           );
         }).toList();
       }
-      
+
       return _getFallbackJobs();
     } catch (e) {
       // Error fetching NCS jobs
       return _getFallbackJobs();
     }
   }
-  
+
   /// Fetches jobs from Adzuna API (50 requests/day free)
   Future<List<Job>> getAdzunaJobs({
     String? location = 'india',
@@ -127,30 +137,30 @@ class ApiService {
         'page': page.toString(),
         'where': location ?? 'india',
       };
-      
+
       if (category != null) {
         queryParams['what'] = category;
       }
-      
+
       final uri = Uri.https(
         'api.adzuna.com',
         '/v1/api/jobs/in/search/$page',
         queryParams,
       );
-      
+
       final response = await _client.get(uri).timeout(_timeout);
-      
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final results = data['results'] as List;
-        
+
         return results.map((jobData) {
           return Job(
             id: jobData['id'].toString(),
             title: jobData['title'] ?? '',
             company: jobData['company']['display_name'] ?? '',
             location: jobData['location']['display_name'] ?? '',
-            salary: jobData['salary_min'] != null 
+            salary: jobData['salary_min'] != null
                 ? '₹${jobData['salary_min']} - ₹${jobData['salary_max'] ?? jobData['salary_min']}'
                 : 'Not specified',
             experience: 'As per requirement',
@@ -163,7 +173,7 @@ class ApiService {
           );
         }).toList();
       }
-      
+
       return _getFallbackJobs();
     } catch (e) {
       // Error fetching Adzuna jobs
@@ -172,7 +182,7 @@ class ApiService {
   }
 
   // ============ COURSE SERVICES ============
-  
+
   /// Fetches courses from Coursera Catalog API
   Future<List<Course>> getCourseraCourses({
     String? category,
@@ -183,34 +193,36 @@ class ApiService {
       final queryParams = {
         'start': ((page - 1) * 20).toString(),
         'limit': '20',
-        'fields': 'name,description,photoUrl,instructors,partners,workload,certificates',
+        'fields':
+            'name,description,photoUrl,instructors,partners,workload,certificates',
       };
-      
+
       if (category != null) {
         queryParams['q'] = 'search';
         queryParams['query'] = category;
       }
-      
+
       final uri = Uri.https(
         'api.coursera.org',
         '/api/courses.v1/courses',
         queryParams,
       );
-      
+
       final response = await _client.get(uri).timeout(_timeout);
-      
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final courses = data['elements'] as List;
-        
+
         return courses.map((courseData) {
           return Course(
             id: courseData['id'].toString(),
             title: courseData['name'] ?? '',
             description: courseData['description'] ?? '',
             provider: 'Coursera',
-            instructor: courseData['instructors']?.isNotEmpty == true 
-                ? courseData['instructors'][0]['fullName'] ?? 'Coursera Instructor'
+            instructor: courseData['instructors']?.isNotEmpty == true
+                ? courseData['instructors'][0]['fullName'] ??
+                      'Coursera Instructor'
                 : 'Coursera Instructor',
             duration: courseData['workload'] ?? '4-6 weeks',
             level: level ?? 'Beginner',
@@ -220,19 +232,21 @@ class ApiService {
             imageUrl: courseData['photoUrl'] ?? '',
             skills: [],
             category: category ?? 'Technology',
-            certificateAvailable: courseData['certificates']?.isNotEmpty == true,
-            courseUrl: 'https://www.coursera.org/learn/${courseData['slug'] ?? ''}',
+            certificateAvailable:
+                courseData['certificates']?.isNotEmpty == true,
+            courseUrl:
+                'https://www.coursera.org/learn/${courseData['slug'] ?? ''}',
           );
         }).toList();
       }
-      
+
       return _getFallbackCourses();
     } catch (e) {
       // Error fetching Coursera courses
       return _getFallbackCourses();
     }
   }
-  
+
   /// Fetches courses from edX Catalog API
   Future<List<Course>> getEdXCourses({
     String? category,
@@ -240,34 +254,27 @@ class ApiService {
     int page = 1,
   }) async {
     try {
-      final queryParams = {
-        'page': page.toString(),
-        'page_size': '20',
-      };
-      
+      final queryParams = {'page': page.toString(), 'page_size': '20'};
+
       if (category != null) {
         queryParams['search'] = category;
       }
-      
-      final uri = Uri.https(
-        'api.edx.org',
-        '/catalog/v1/courses/',
-        queryParams,
-      );
-      
+
+      final uri = Uri.https('api.edx.org', '/catalog/v1/courses/', queryParams);
+
       final response = await _client.get(uri).timeout(_timeout);
-      
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final courses = data['results'] as List;
-        
+
         return courses.map((courseData) {
           return Course(
             id: courseData['key'].toString(),
             title: courseData['title'] ?? '',
             description: courseData['short_description'] ?? '',
             provider: 'edX',
-            instructor: courseData['owners']?.isNotEmpty == true 
+            instructor: courseData['owners']?.isNotEmpty == true
                 ? courseData['owners'][0]['name'] ?? 'edX Instructor'
                 : 'edX Instructor',
             duration: '6-8 weeks',
@@ -276,21 +283,25 @@ class ApiService {
             enrolledCount: 5000,
             price: 'Free (Certificate fee applies)',
             imageUrl: courseData['image']?['src'] ?? '',
-            skills: (courseData['subjects'] as List?)?.map((s) => s['name'].toString()).toList() ?? [],
+            skills:
+                (courseData['subjects'] as List?)
+                    ?.map((s) => s['name'].toString())
+                    .toList() ??
+                [],
             category: category ?? 'Education',
             certificateAvailable: true,
             courseUrl: 'https://www.edx.org/course/${courseData['key']}',
           );
         }).toList();
       }
-      
+
       return _getFallbackCourses();
     } catch (e) {
       // Error fetching edX courses
       return _getFallbackCourses();
     }
   }
-  
+
   /// Fetches learning videos from YouTube Data API
   Future<List<Course>> getYouTubeLearningContent({
     required String query,
@@ -306,19 +317,19 @@ class ApiService {
         'videoDuration': 'medium',
         'key': _youtubeApiKey,
       };
-      
+
       final uri = Uri.https(
         'www.googleapis.com',
         '/youtube/v3/search',
         queryParams,
       );
-      
+
       final response = await _client.get(uri).timeout(_timeout);
-      
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final videos = data['items'] as List;
-        
+
         return videos.map((videoData) {
           final snippet = videoData['snippet'];
           return Course(
@@ -336,11 +347,12 @@ class ApiService {
             skills: [query],
             category: 'Video Learning',
             certificateAvailable: false,
-            courseUrl: 'https://www.youtube.com/watch?v=${videoData['id']['videoId']}',
+            courseUrl:
+                'https://www.youtube.com/watch?v=${videoData['id']['videoId']}',
           );
         }).toList();
       }
-      
+
       return [];
     } catch (e) {
       // Error fetching YouTube content
@@ -349,7 +361,7 @@ class ApiService {
   }
 
   // ============ CAREER GUIDANCE SERVICES ============
-  
+
   /// Fetches career data from O*NET Web Services
   Future<CareerData> getONetCareerData(String occupation) async {
     try {
@@ -357,24 +369,31 @@ class ApiService {
         'services.onetcenter.org',
         '/ws/online/occupations/$occupation/summary',
       );
-      
+
       final response = await _client.get(uri).timeout(_timeout);
-      
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        
+
         return CareerData(
           title: data['title'] ?? occupation,
           description: data['description'] ?? '',
-          skills: (data['skills'] as List?)?.map((s) => s.toString()).toList() ?? [],
-          averageSalary: data['median_wages']?['annual']?.toString() ?? 'Not available',
+          skills:
+              (data['skills'] as List?)?.map((s) => s.toString()).toList() ??
+              [],
+          averageSalary:
+              data['median_wages']?['annual']?.toString() ?? 'Not available',
           jobOutlook: data['job_outlook'] ?? 'Stable',
           education: data['education'] ?? 'Bachelor\'s degree',
           workEnvironment: data['work_environment'] ?? 'Office setting',
-          relatedOccupations: (data['related_occupations'] as List?)?.map((o) => o.toString()).toList() ?? [],
+          relatedOccupations:
+              (data['related_occupations'] as List?)
+                  ?.map((o) => o.toString())
+                  .toList() ??
+              [],
         );
       }
-      
+
       return _getFallbackCareerData(occupation);
     } catch (e) {
       // Error fetching O*NET career data
@@ -383,7 +402,7 @@ class ApiService {
   }
 
   // ============ MARKET TRENDS SERVICES ============
-  
+
   /// Fetches employment data from World Bank API
   Future<Map<String, dynamic>> getEmploymentTrends(String countryCode) async {
     try {
@@ -392,9 +411,9 @@ class ApiService {
         '/v2/country/$countryCode/indicator/SL.UEM.TOTL.ZS',
         {'format': 'json', 'date': '2020:2023'},
       );
-      
+
       final response = await _client.get(uri).timeout(_timeout);
-      
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data is List && data.length > 1) {
@@ -406,35 +425,45 @@ class ApiService {
           };
         }
       }
-      
-      return {'unemployment_rate': '7.5', 'year': '2023', 'country': countryCode};
+
+      return {
+        'unemployment_rate': '7.5',
+        'year': '2023',
+        'country': countryCode,
+      };
     } catch (e) {
       // Error fetching employment trends
-      return {'unemployment_rate': '7.5', 'year': '2023', 'country': countryCode};
+      return {
+        'unemployment_rate': '7.5',
+        'year': '2023',
+        'country': countryCode,
+      };
     }
   }
 
   // ============ TRANSLATION SERVICES ============
-  
+
   /// Translates text using LibreTranslate
   Future<String> translateText(String text, String targetLanguage) async {
     try {
-      final response = await _client.post(
-        Uri.parse('https://libretranslate.de/translate'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'q': text,
-          'source': 'en',
-          'target': targetLanguage,
-          'format': 'text',
-        }),
-      ).timeout(_timeout);
-      
+      final response = await _client
+          .post(
+            Uri.parse('https://libretranslate.de/translate'),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({
+              'q': text,
+              'source': 'en',
+              'target': targetLanguage,
+              'format': 'text',
+            }),
+          )
+          .timeout(_timeout);
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         return data['translatedText'] ?? text;
       }
-      
+
       return text;
     } catch (e) {
       // Error translating text
@@ -443,7 +472,7 @@ class ApiService {
   }
 
   // ============ LOCATION SERVICES ============
-  
+
   /// Finds colleges near a location using Google Maps Places API
   Future<List<Map<String, dynamic>>> findNearbyColleges({
     required double latitude,
@@ -457,28 +486,32 @@ class ApiService {
         'type': 'university',
         'key': _googleMapsApiKey,
       };
-      
+
       final uri = Uri.https(
         'maps.googleapis.com',
         '/maps/api/place/nearbysearch/json',
         queryParams,
       );
-      
+
       final response = await _client.get(uri).timeout(_timeout);
-      
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final results = data['results'] as List;
-        
-        return results.map((place) => {
-          'name': place['name'],
-          'rating': place['rating'],
-          'vicinity': place['vicinity'],
-          'place_id': place['place_id'],
-          'types': place['types'],
-        }).toList();
+
+        return results
+            .map(
+              (place) => {
+                'name': place['name'],
+                'rating': place['rating'],
+                'vicinity': place['vicinity'],
+                'place_id': place['place_id'],
+                'types': place['types'],
+              },
+            )
+            .toList();
       }
-      
+
       return [];
     } catch (e) {
       // Error finding nearby colleges
@@ -487,13 +520,13 @@ class ApiService {
   }
 
   // ============ HELPER METHODS ============
-  
+
   String _parseAmount(String amountText) {
     final regex = RegExp(r'[\d,]+');
     final match = regex.firstMatch(amountText);
     return match?.group(0) ?? '0';
   }
-  
+
   DateTime _parseDate(String dateText) {
     try {
       // Try to parse common date formats
@@ -503,13 +536,14 @@ class ApiService {
       return DateTime.now().add(const Duration(days: 30));
     }
   }
-  
+
   List<Scholarship> _getFallbackScholarships() {
     return [
       Scholarship(
         id: '1',
         title: 'Merit-cum-Means Scholarship',
-        description: 'For economically weaker sections with good academic performance',
+        description:
+            'For economically weaker sections with good academic performance',
         amount: '12000',
         deadline: DateTime.now().add(const Duration(days: 45)),
         eligibility: ['Income < 2.5 LPA', 'Minimum 60% marks'],
@@ -520,7 +554,7 @@ class ApiService {
       ),
     ];
   }
-  
+
   List<Job> _getFallbackJobs() {
     return [
       Job(
@@ -539,7 +573,7 @@ class ApiService {
       ),
     ];
   }
-  
+
   List<Course> _getFallbackCourses() {
     return [
       Course(
@@ -561,7 +595,7 @@ class ApiService {
       ),
     ];
   }
-  
+
   CareerData _getFallbackCareerData(String occupation) {
     return CareerData(
       title: occupation,
@@ -574,7 +608,7 @@ class ApiService {
       relatedOccupations: [],
     );
   }
-  
+
   void dispose() {
     _client.close();
   }
