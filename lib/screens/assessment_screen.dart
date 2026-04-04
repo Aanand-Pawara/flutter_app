@@ -18,60 +18,75 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
 
   final List<CareerPath> _careerPaths = [
     CareerPath('10th', '10th Standard', Icons.school, const Color(0xFF3B82F6)),
-    CareerPath('12th', '12th Standard', Icons.school_outlined, const Color(0xFF10B981)),
-    CareerPath('neet', 'NEET Preparation', Icons.medical_services, const Color(0xFFEF4444)),
-    CareerPath('jee', 'JEE Preparation', Icons.calculate, const Color(0xFFF97316)),
-    CareerPath('govt', 'Government Jobs', Icons.account_balance, const Color(0xFF8B5CF6)),
-    CareerPath('ssc', 'SSC Preparation', Icons.assignment, const Color(0xFF14B8A6)),
-    CareerPath('professional', 'Working Professional', Icons.work, Colors.indigo),
+    CareerPath(
+      '12th',
+      '12th Standard',
+      Icons.school_outlined,
+      const Color(0xFF10B981),
+    ),
+    CareerPath(
+      'neet',
+      'NEET Preparation',
+      Icons.medical_services,
+      const Color(0xFFEF4444),
+    ),
+    CareerPath(
+      'jee',
+      'JEE Preparation',
+      Icons.calculate,
+      const Color(0xFFF97316),
+    ),
+    CareerPath(
+      'govt',
+      'Government Jobs',
+      Icons.account_balance,
+      const Color(0xFF8B5CF6),
+    ),
+    CareerPath(
+      'ssc',
+      'SSC Preparation',
+      Icons.assignment,
+      const Color(0xFF14B8A6),
+    ),
+    CareerPath(
+      'professional',
+      'Working Professional',
+      Icons.work,
+      Colors.indigo,
+    ),
   ];
 
   final List<AssessmentQuestion> _questions = [
-    AssessmentQuestion(
-      'What type of activities do you enjoy most?',
-      [
-        'Working with people and helping them',
-        'Analyzing data and solving problems',
-        'Creating and designing things',
-        'Leading teams and making decisions'
-      ],
-    ),
-    AssessmentQuestion(
-      'Which work environment appeals to you?',
-      [
-        'Office setting with regular hours',
-        'Dynamic environment with travel',
-        'Remote work with flexibility',
-        'Hands-on workshop or lab'
-      ],
-    ),
-    AssessmentQuestion(
-      'What motivates you most in your career?',
-      [
-        'Making a positive impact on society',
-        'Financial stability and growth',
-        'Personal recognition and achievement',
-        'Learning and skill development'
-      ],
-    ),
-    AssessmentQuestion(
-      'How do you prefer to learn new skills?',
-      [
-        'Structured courses and certifications',
-        'Hands-on practice and experimentation',
-        'Reading and self-study',
-        'Mentorship and guidance'
-      ],
-    ),
-    AssessmentQuestion(
-      'What\'s your ideal work-life balance?',
-      [
-        'Clear separation between work and personal time',
-        'Flexible hours based on project needs',
-        'Work that feels like a passion',
-        'Standard 9-5 with weekends off'
-      ],
-    ),
+    AssessmentQuestion('What type of activities do you enjoy most?', [
+      'Working with people and helping them',
+      'Analyzing data and solving problems',
+      'Creating and designing things',
+      'Leading teams and making decisions',
+    ]),
+    AssessmentQuestion('Which work environment appeals to you?', [
+      'Office setting with regular hours',
+      'Dynamic environment with travel',
+      'Remote work with flexibility',
+      'Hands-on workshop or lab',
+    ]),
+    AssessmentQuestion('What motivates you most in your career?', [
+      'Making a positive impact on society',
+      'Financial stability and growth',
+      'Personal recognition and achievement',
+      'Learning and skill development',
+    ]),
+    AssessmentQuestion('How do you prefer to learn new skills?', [
+      'Structured courses and certifications',
+      'Hands-on practice and experimentation',
+      'Reading and self-study',
+      'Mentorship and guidance',
+    ]),
+    AssessmentQuestion('What\'s your ideal work-life balance?', [
+      'Clear separation between work and personal time',
+      'Flexible hours based on project needs',
+      'Work that feels like a passion',
+      'Standard 9-5 with weekends off',
+    ]),
   ];
 
   @override
@@ -95,7 +110,7 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
   void _answerQuestion(String answer) {
     final appProvider = Provider.of<AppProvider>(context, listen: false);
     appProvider.updateAssessmentAnswer(_currentQuestion.toString(), answer);
-    
+
     if (_currentQuestion < _questions.length - 1) {
       setState(() {
         _currentQuestion++;
@@ -111,14 +126,14 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
   void _completeAssessment() {
     final appProvider = Provider.of<AppProvider>(context, listen: false);
     appProvider.updateAssessmentProgress(100);
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Assessment completed successfully!'),
-        backgroundColor: const Color(0xFF10B981),
+        backgroundColor: Color(0xFF10B981),
       ),
     );
-    
+
     context.go('/dashboard');
   }
 
@@ -166,10 +181,7 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
       body: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
-        children: [
-          _buildCareerPathSelection(),
-          _buildQuestionnaireSection(),
-        ],
+        children: [_buildCareerPathSelection(), _buildQuestionnaireSection()],
       ),
     );
   }
@@ -182,16 +194,16 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
         children: [
           Text(
             'Choose Your Career Path',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
             'Select the path that best describes your current situation or goals',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Colors.grey[600],
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
           ),
           const SizedBox(height: 32),
           Expanded(
@@ -217,7 +229,12 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                           Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(26, careerPath.color.red, careerPath.color.green, careerPath.color.blue),
+                              color: Color.fromARGB(
+                                26,
+                                careerPath.color.red,
+                                careerPath.color.green,
+                                careerPath.color.blue,
+                              ),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
@@ -229,9 +246,8 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                           const SizedBox(height: 12),
                           Text(
                             careerPath.label,
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(fontWeight: FontWeight.w600),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -250,7 +266,9 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
   Widget _buildQuestionnaireSection() {
     final progress = (_currentQuestion + 1) / _questions.length;
     final currentQ = _questions[_currentQuestion];
-    final selectedPath = _careerPaths.firstWhere((p) => p.id == _selectedCareerPath);
+    final selectedPath = _careerPaths.firstWhere(
+      (p) => p.id == _selectedCareerPath,
+    );
 
     return Padding(
       padding: const EdgeInsets.all(24.0),
@@ -262,7 +280,10 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
@@ -277,14 +298,14 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
               ),
               Text(
                 selectedPath.label,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey[600],
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          
+
           // Progress Bar
           LinearProgressIndicator(
             value: progress,
@@ -304,26 +325,30 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                   children: [
                     Text(
                       currentQ.question,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 32),
                     Expanded(
                       child: Consumer<AppProvider>(
                         builder: (context, appProvider, child) {
-                          final selectedAnswer = appProvider.assessmentData.answers[_currentQuestion.toString()];
-                          
+                          final selectedAnswer = appProvider
+                              .assessmentData
+                              .answers[_currentQuestion.toString()];
+
                           return ListView.separated(
                             itemCount: currentQ.options.length,
-                            separatorBuilder: (context, index) => const SizedBox(height: 12),
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 12),
                             itemBuilder: (context, index) {
                               final option = currentQ.options[index];
                               final isSelected = selectedAnswer == option;
-                              
+
                               return Card(
                                 elevation: isSelected ? 4 : 1,
-                                color: _selectedCareerPath == selectedPath.id ? const Color(0x1A2563EB) : Colors.transparent,
+                                color: _selectedCareerPath == selectedPath.id
+                                    ? const Color(0x1A2563EB)
+                                    : Colors.transparent,
                                 child: InkWell(
                                   onTap: () => _answerQuestion(option),
                                   borderRadius: BorderRadius.circular(16),
@@ -334,15 +359,21 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                                         Radio<String>(
                                           value: option,
                                           groupValue: selectedAnswer,
-                                          onChanged: (value) => _answerQuestion(value!),
+                                          onChanged: (value) =>
+                                              _answerQuestion(value!),
                                         ),
                                         const SizedBox(width: 12),
                                         Expanded(
                                           child: Text(
                                             option,
-                                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                              fontWeight: isSelected ? FontWeight.w600 : null,
-                                            ),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.copyWith(
+                                                  fontWeight: isSelected
+                                                      ? FontWeight.w600
+                                                      : null,
+                                                ),
                                           ),
                                         ),
                                       ],
@@ -371,26 +402,34 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                 icon: const Icon(Icons.arrow_back),
                 label: const Text('Previous'),
               ),
-              TextButton(
-                onPressed: _skipQuestion,
-                child: const Text('Skip'),
-              ),
+              TextButton(onPressed: _skipQuestion, child: const Text('Skip')),
               Consumer<AppProvider>(
                 builder: (context, appProvider, child) {
-                  final hasAnswer = appProvider.assessmentData.answers.containsKey(_currentQuestion.toString());
-                  
+                  final hasAnswer = appProvider.assessmentData.answers
+                      .containsKey(_currentQuestion.toString());
+
                   return ElevatedButton.icon(
-                    onPressed: hasAnswer ? () {
-                      if (_currentQuestion < _questions.length - 1) {
-                        setState(() {
-                          _currentQuestion++;
-                        });
-                      } else {
-                        _completeAssessment();
-                      }
-                    } : null,
-                    icon: Icon(_currentQuestion == _questions.length - 1 ? Icons.check : Icons.arrow_forward),
-                    label: Text(_currentQuestion == _questions.length - 1 ? 'Complete' : 'Next'),
+                    onPressed: hasAnswer
+                        ? () {
+                            if (_currentQuestion < _questions.length - 1) {
+                              setState(() {
+                                _currentQuestion++;
+                              });
+                            } else {
+                              _completeAssessment();
+                            }
+                          }
+                        : null,
+                    icon: Icon(
+                      _currentQuestion == _questions.length - 1
+                          ? Icons.check
+                          : Icons.arrow_forward,
+                    ),
+                    label: Text(
+                      _currentQuestion == _questions.length - 1
+                          ? 'Complete'
+                          : 'Next',
+                    ),
                   );
                 },
               ),

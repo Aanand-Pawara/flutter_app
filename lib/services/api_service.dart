@@ -37,11 +37,11 @@ class ApiService {
         final scholarshipElements = document.querySelectorAll('.scholarship-card');
         
         return scholarshipElements.map((element) {
-          final title = element.querySelector('.scheme-name')?.text?.trim() ?? '';
-          final description = element.querySelector('.scheme-desc')?.text?.trim() ?? '';
-          final deadline = element.querySelector('.deadline')?.text?.trim() ?? '';
-          final amount = element.querySelector('.amount')?.text?.trim() ?? '';
-          final eligibility = element.querySelector('.eligibility')?.text?.trim() ?? '';
+          final title = element.querySelector('.scheme-name')?.text.trim() ?? '';
+          final description = element.querySelector('.scheme-desc')?.text.trim() ?? '';
+          final deadline = element.querySelector('.deadline')?.text.trim() ?? '';
+          final amount = element.querySelector('.amount')?.text.trim() ?? '';
+          final eligibility = element.querySelector('.eligibility')?.text.trim() ?? '';
           
           return Scholarship(
             id: title.hashCode.toString(),
@@ -83,11 +83,11 @@ class ApiService {
         final jobElements = document.querySelectorAll('.job-listing');
         
         return jobElements.map((element) {
-          final title = element.querySelector('.job-title')?.text?.trim() ?? '';
-          final company = element.querySelector('.company-name')?.text?.trim() ?? '';
-          final jobLocation = element.querySelector('.location')?.text?.trim() ?? '';
-          final salary = element.querySelector('.salary')?.text?.trim() ?? '';
-          final experience = element.querySelector('.experience')?.text?.trim() ?? '';
+          final title = element.querySelector('.job-title')?.text.trim() ?? '';
+          final company = element.querySelector('.company-name')?.text.trim() ?? '';
+          final jobLocation = element.querySelector('.location')?.text.trim() ?? '';
+          final salary = element.querySelector('.salary')?.text.trim() ?? '';
+          final experience = element.querySelector('.experience')?.text.trim() ?? '';
           
           return Job(
             id: title.hashCode.toString(),

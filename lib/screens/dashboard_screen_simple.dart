@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_app/providers/app_provider.dart';
 import 'package:flutter_app/utils/app_theme.dart';
 import 'package:flutter_app/utils/responsive_utils.dart';
 
@@ -50,7 +47,11 @@ class DashboardScreen extends StatelessWidget {
           Text(
             'Welcome to OSCAR',
             style: TextStyle(
-              fontSize: ResponsiveUtils.responsiveFontSize(context, mobile: 24, tablet: 28),
+              fontSize: ResponsiveUtils.responsiveFontSize(
+                context,
+                mobile: 24,
+                tablet: 28,
+              ),
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -59,7 +60,11 @@ class DashboardScreen extends StatelessWidget {
           Text(
             'Your AI-powered career guidance platform',
             style: TextStyle(
-              fontSize: ResponsiveUtils.responsiveFontSize(context, mobile: 16, tablet: 18),
+              fontSize: ResponsiveUtils.responsiveFontSize(
+                context,
+                mobile: 16,
+                tablet: 18,
+              ),
               color: Colors.white.withOpacity(0.9),
             ),
           ),
@@ -74,9 +79,9 @@ class DashboardScreen extends StatelessWidget {
       children: [
         Text(
           'Quick Actions',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: ResponsiveUtils.getSpacing(context, scale: 0.75)),
         GridView.count(
@@ -155,7 +160,11 @@ class DashboardScreen extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                fontSize: ResponsiveUtils.responsiveFontSize(context, mobile: 14, tablet: 16),
+                fontSize: ResponsiveUtils.responsiveFontSize(
+                  context,
+                  mobile: 14,
+                  tablet: 16,
+                ),
                 fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,
               ),
@@ -173,9 +182,9 @@ class DashboardScreen extends StatelessWidget {
       children: [
         Text(
           'Your Progress',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: ResponsiveUtils.getSpacing(context, scale: 0.75)),
         Container(
@@ -200,7 +209,11 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressItem(BuildContext context, String title, double progress) {
+  Widget _buildProgressItem(
+    BuildContext context,
+    String title,
+    double progress,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -210,14 +223,22 @@ class DashboardScreen extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                fontSize: ResponsiveUtils.responsiveFontSize(context, mobile: 16, tablet: 18),
+                fontSize: ResponsiveUtils.responsiveFontSize(
+                  context,
+                  mobile: 16,
+                  tablet: 18,
+                ),
                 fontWeight: FontWeight.w500,
               ),
             ),
             Text(
               '${(progress * 100).toInt()}%',
               style: TextStyle(
-                fontSize: ResponsiveUtils.responsiveFontSize(context, mobile: 14, tablet: 16),
+                fontSize: ResponsiveUtils.responsiveFontSize(
+                  context,
+                  mobile: 14,
+                  tablet: 16,
+                ),
                 fontWeight: FontWeight.w600,
                 color: AppColors.primary,
               ),

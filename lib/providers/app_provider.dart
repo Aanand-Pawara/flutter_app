@@ -65,9 +65,9 @@ class AppProvider extends ChangeNotifier {
     recommendations: [],
     strengths: [],
   );
-  List<String> _bookmarkedResources = [];
-  List<String> _completedResources = [];
-  List<String> _inProgressResources = [];
+  final List<String> _bookmarkedResources = [];
+  final List<String> _completedResources = [];
+  final List<String> _inProgressResources = [];
   bool _isLoading = false;
   String? _error;
 
@@ -89,11 +89,7 @@ class AppProvider extends ChangeNotifier {
     try {
       // Mock authentication
       await Future.delayed(const Duration(seconds: 2));
-      _user = User(
-        id: '1',
-        name: 'John Doe',
-        email: email,
-      );
+      _user = User(id: '1', name: 'John Doe', email: email);
       _isAuthenticated = true;
       _error = null;
       notifyListeners();
@@ -109,11 +105,7 @@ class AppProvider extends ChangeNotifier {
     try {
       // Mock registration
       await Future.delayed(const Duration(seconds: 2));
-      _user = User(
-        id: '1',
-        name: name,
-        email: email,
-      );
+      _user = User(id: '1', name: name, email: email);
       _isAuthenticated = true;
       _error = null;
       notifyListeners();
@@ -187,7 +179,9 @@ class AppProvider extends ChangeNotifier {
 
   void completeInterviewTopic(String topic) {
     if (!_interviewPrepData.completedTopics.contains(topic)) {
-      final updatedTopics = List<String>.from(_interviewPrepData.completedTopics);
+      final updatedTopics = List<String>.from(
+        _interviewPrepData.completedTopics,
+      );
       updatedTopics.add(topic);
       _interviewPrepData = InterviewPrepData(
         answers: _interviewPrepData.answers,
@@ -203,7 +197,9 @@ class AppProvider extends ChangeNotifier {
 
   void addPracticeQuestion(String question) {
     if (!_interviewPrepData.practiceQuestions.contains(question)) {
-      final updatedQuestions = List<String>.from(_interviewPrepData.practiceQuestions);
+      final updatedQuestions = List<String>.from(
+        _interviewPrepData.practiceQuestions,
+      );
       updatedQuestions.add(question);
       _interviewPrepData = InterviewPrepData(
         answers: _interviewPrepData.answers,
@@ -230,19 +226,19 @@ class AppProvider extends ChangeNotifier {
           'Machine Learning',
           'Cloud Computing (AWS)',
           'Project Management',
-          'Data Visualization'
+          'Data Visualization',
         ],
         recommendations: [
           'Add more quantified achievements',
           'Include relevant keywords for ATS',
           'Improve formatting consistency',
-          'Add technical skills section'
+          'Add technical skills section',
         ],
         strengths: [
           'Strong educational background',
           'Relevant work experience',
           'Good use of action verbs',
-          'Clear contact information'
+          'Clear contact information',
         ],
       );
       _error = null;
@@ -308,16 +304,16 @@ class AppProvider extends ChangeNotifier {
   String? _selectedCareerPath;
   String? _userType;
   String? _experienceLevel;
-  
+
   String? get selectedCareerPath => _selectedCareerPath;
   String? get userType => _userType;
   String? get experienceLevel => _experienceLevel;
-  
+
   void setCareerPath(String careerPath) {
     _selectedCareerPath = careerPath;
     notifyListeners();
   }
-  
+
   void updateUserProfile({
     required String userType,
     required String careerPath,

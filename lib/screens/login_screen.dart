@@ -15,10 +15,10 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
-  bool _isLogin = true;
-  bool _obscurePassword = true;
-  bool _rememberMe = false;
-  String _selectedLanguage = 'English';
+  final bool _isLogin = true;
+  final bool _obscurePassword = true;
+  final bool _rememberMe = false;
+  final String _selectedLanguage = 'English';
   
   late AnimationController _animationController;
   late AnimationController _slideController;
@@ -210,8 +210,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
     );
   }SnackBar(
           SnackBar(
-            content: Text(appProvider.error ?? 'An error occurred'),
-            backgroundColor: const Color(0xFFEF4444),
+            content = Text(appProvider.error ?? 'An error occurred'),
+            backgroundColor = const Color(0xFFEF4444),
           ),
         );
       }

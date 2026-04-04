@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_app/providers/app_provider.dart';
 import 'package:flutter_app/utils/app_theme.dart';
 
 class EnhancedResourcesScreen extends StatefulWidget {
   const EnhancedResourcesScreen({super.key});
 
   @override
-  State<EnhancedResourcesScreen> createState() => _EnhancedResourcesScreenState();
+  State<EnhancedResourcesScreen> createState() =>
+      _EnhancedResourcesScreenState();
 }
 
-class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen> 
+class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   String _selectedCategory = 'All';
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
 
   final List<String> _categories = [
-    'All', 'Courses', 'Scholarships', 'Jobs', 'Roadmaps', 'Study Material'
+    'All',
+    'Courses',
+    'Scholarships',
+    'Jobs',
+    'Roadmaps',
+    'Study Material',
   ];
 
   final List<ResourceItem> _resources = [
@@ -29,7 +33,8 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
     ResourceItem(
       id: '1',
       title: 'Complete NEET Biology Course',
-      description: 'Comprehensive biology course covering all NEET topics with video lectures and practice tests.',
+      description:
+          'Comprehensive biology course covering all NEET topics with video lectures and practice tests.',
       category: 'Courses',
       type: ResourceType.course,
       rating: 4.8,
@@ -44,7 +49,8 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
     ResourceItem(
       id: '2',
       title: 'JEE Mathematics Masterclass',
-      description: 'Advanced mathematics course for JEE preparation with problem-solving techniques.',
+      description:
+          'Advanced mathematics course for JEE preparation with problem-solving techniques.',
       category: 'Courses',
       type: ResourceType.course,
       rating: 4.9,
@@ -59,7 +65,8 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
     ResourceItem(
       id: '3',
       title: 'Programming Fundamentals',
-      description: 'Learn programming basics with Python, perfect for beginners in technology.',
+      description:
+          'Learn programming basics with Python, perfect for beginners in technology.',
       category: 'Courses',
       type: ResourceType.course,
       rating: 4.7,
@@ -71,12 +78,13 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
       tags: ['Programming', 'Python', 'Technology'],
       provider: 'Code Academy',
     ),
-    
+
     // Scholarships
     ResourceItem(
       id: '4',
       title: 'National Merit Scholarship',
-      description: 'Merit-based scholarship for students pursuing higher education in India.',
+      description:
+          'Merit-based scholarship for students pursuing higher education in India.',
       category: 'Scholarships',
       type: ResourceType.scholarship,
       rating: 0,
@@ -91,7 +99,8 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
     ResourceItem(
       id: '5',
       title: 'INSPIRE Scholarship Scheme',
-      description: 'Scholarship for students pursuing science courses at undergraduate and postgraduate levels.',
+      description:
+          'Scholarship for students pursuing science courses at undergraduate and postgraduate levels.',
       category: 'Scholarships',
       type: ResourceType.scholarship,
       rating: 0,
@@ -103,12 +112,13 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
       tags: ['Science', 'DST', 'Research'],
       provider: 'Department of Science & Technology',
     ),
-    
+
     // Jobs
     ResourceItem(
       id: '6',
       title: 'Software Developer Internship',
-      description: 'Exciting internship opportunity for computer science students.',
+      description:
+          'Exciting internship opportunity for computer science students.',
       category: 'Jobs',
       type: ResourceType.job,
       rating: 0,
@@ -123,7 +133,8 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
     ResourceItem(
       id: '7',
       title: 'Government Teaching Position',
-      description: 'Teaching positions available in government schools across various subjects.',
+      description:
+          'Teaching positions available in government schools across various subjects.',
       category: 'Jobs',
       type: ResourceType.job,
       rating: 0,
@@ -135,12 +146,13 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
       tags: ['Teaching', 'Government', 'Education'],
       provider: 'State Education Department',
     ),
-    
+
     // Roadmaps
     ResourceItem(
       id: '8',
       title: 'NEET Preparation Roadmap',
-      description: 'Complete 2-year preparation strategy for NEET with monthly milestones.',
+      description:
+          'Complete 2-year preparation strategy for NEET with monthly milestones.',
       category: 'Roadmaps',
       type: ResourceType.roadmap,
       rating: 4.6,
@@ -155,7 +167,8 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
     ResourceItem(
       id: '9',
       title: 'Software Engineer Career Path',
-      description: 'Step-by-step guide to becoming a software engineer from scratch.',
+      description:
+          'Step-by-step guide to becoming a software engineer from scratch.',
       category: 'Roadmaps',
       type: ResourceType.roadmap,
       rating: 4.8,
@@ -167,12 +180,13 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
       tags: ['Software Engineering', 'Technology', 'Career'],
       provider: 'Tech Career Guide',
     ),
-    
+
     // Study Material
     ResourceItem(
       id: '10',
       title: 'NCERT Solutions Class 12',
-      description: 'Complete solutions for NCERT textbooks of Class 12 all subjects.',
+      description:
+          'Complete solutions for NCERT textbooks of Class 12 all subjects.',
       category: 'Study Material',
       type: ResourceType.studyMaterial,
       rating: 4.9,
@@ -216,12 +230,18 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
 
   List<ResourceItem> get filteredResources {
     return _resources.where((resource) {
-      final matchesCategory = _selectedCategory == 'All' || resource.category == _selectedCategory;
-      final matchesSearch = _searchQuery.isEmpty || 
+      final matchesCategory =
+          _selectedCategory == 'All' || resource.category == _selectedCategory;
+      final matchesSearch =
+          _searchQuery.isEmpty ||
           resource.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          resource.description.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          resource.tags.any((tag) => tag.toLowerCase().contains(_searchQuery.toLowerCase()));
-      
+          resource.description.toLowerCase().contains(
+            _searchQuery.toLowerCase(),
+          ) ||
+          resource.tags.any(
+            (tag) => tag.toLowerCase().contains(_searchQuery.toLowerCase()),
+          );
+
       return matchesCategory && matchesSearch;
     }).toList();
   }
@@ -291,10 +311,7 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
                 ),
                 Text(
                   'Discover courses, scholarships & more',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white70,
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.white70),
                 ),
               ],
             ),
@@ -303,10 +320,7 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
             onPressed: () {
               // Filter options
             },
-            icon: const Icon(
-              Icons.tune,
-              color: Colors.white,
-            ),
+            icon: const Icon(Icons.tune, color: Colors.white),
           ),
         ],
       ),
@@ -358,7 +372,7 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
               itemBuilder: (context, index) {
                 final category = _categories[index];
                 final isSelected = _selectedCategory == category;
-                
+
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: FilterChip(
@@ -410,32 +424,22 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
 
   Widget _buildResourcesList() {
     final resources = filteredResources;
-    
+
     if (resources.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.search_off,
-              size: 64,
-              color: AppColors.textTertiary,
-            ),
+            Icon(Icons.search_off, size: 64, color: AppColors.textTertiary),
             const SizedBox(height: 16),
             Text(
               'No resources found',
-              style: TextStyle(
-                fontSize: 18,
-                color: AppColors.textSecondary,
-              ),
+              style: TextStyle(fontSize: 18, color: AppColors.textSecondary),
             ),
             const SizedBox(height: 8),
             Text(
               'Try adjusting your search or filters',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.textTertiary,
-              ),
+              style: TextStyle(fontSize: 14, color: AppColors.textTertiary),
             ),
           ],
         ),
@@ -452,8 +456,10 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
   }
 
   Widget _buildBookmarkedResources() {
-    final bookmarkedResources = _resources.where((r) => r.isBookmarked).toList();
-    
+    final bookmarkedResources = _resources
+        .where((r) => r.isBookmarked)
+        .toList();
+
     if (bookmarkedResources.isEmpty) {
       return Center(
         child: Column(
@@ -467,18 +473,12 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
             const SizedBox(height: 16),
             Text(
               'No bookmarked resources',
-              style: TextStyle(
-                fontSize: 18,
-                color: AppColors.textSecondary,
-              ),
+              style: TextStyle(fontSize: 18, color: AppColors.textSecondary),
             ),
             const SizedBox(height: 8),
             Text(
               'Bookmark resources to access them quickly',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.textTertiary,
-              ),
+              style: TextStyle(fontSize: 14, color: AppColors.textTertiary),
             ),
           ],
         ),
@@ -549,11 +549,11 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
                             IconButton(
                               onPressed: () => _toggleBookmark(resource),
                               icon: Icon(
-                                resource.isBookmarked 
-                                    ? Icons.bookmark 
+                                resource.isBookmarked
+                                    ? Icons.bookmark
                                     : Icons.bookmark_border,
-                                color: resource.isBookmarked 
-                                    ? AppColors.primary 
+                                color: resource.isBookmarked
+                                    ? AppColors.primary
                                     : AppColors.textTertiary,
                               ),
                             ),
@@ -596,11 +596,7 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
                     const Spacer(),
                     Row(
                       children: [
-                        Icon(
-                          Icons.star,
-                          size: 16,
-                          color: Colors.amber,
-                        ),
+                        Icon(Icons.star, size: 16, color: Colors.amber),
                         const SizedBox(width: 4),
                         Text(
                           resource.rating.toString(),
@@ -621,7 +617,10 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
                 runSpacing: 4,
                 children: resource.tags.take(3).map((tag) {
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(12),
@@ -654,11 +653,7 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            size: 12,
-            color: AppColors.textTertiary,
-          ),
+          Icon(icon, size: 12, color: AppColors.textTertiary),
           const SizedBox(width: 4),
           Text(
             text,
@@ -707,10 +702,12 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
     setState(() {
       final index = _resources.indexWhere((r) => r.id == resource.id);
       if (index != -1) {
-        _resources[index] = resource.copyWith(isBookmarked: !resource.isBookmarked);
+        _resources[index] = resource.copyWith(
+          isBookmarked: !resource.isBookmarked,
+        );
       }
     });
-    
+
     // Here you would typically update the backend
     final action = resource.isBookmarked ? 'removed from' : 'added to';
     ScaffoldMessenger.of(context).showSnackBar(
@@ -765,7 +762,9 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
                             width: 60,
                             height: 60,
                             decoration: BoxDecoration(
-                              color: _getResourceColor(resource.type).withOpacity(0.1),
+                              color: _getResourceColor(
+                                resource.type,
+                              ).withOpacity(0.1),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Icon(
@@ -867,17 +866,11 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
         children: [
           Text(
             label,
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
           ),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -910,13 +903,7 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
   }
 }
 
-enum ResourceType {
-  course,
-  scholarship,
-  job,
-  roadmap,
-  studyMaterial,
-}
+enum ResourceType { course, scholarship, job, roadmap, studyMaterial }
 
 class ResourceItem {
   final String id;

@@ -22,9 +22,9 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
   String? _selectedIndustry;
   String? _selectedExperience;
   String? _selectedFilePath;
-  bool _isAnalyzing = false;
-  bool _hasResults = false;
-  Map<String, dynamic> _analysisResults = {};
+  final bool _isAnalyzing = false;
+  final bool _hasResults = false;
+  final Map<String, dynamic> _analysisResults = {};
   double _uploadProgress = 0.0;
 
   final List<String> _industries = [
@@ -34,14 +34,14 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
     'Education',
     'Manufacturing',
     'Retail',
-    'Other'
+    'Other',
   ];
 
   final List<String> _experienceLevels = [
     'Entry Level (0-2 years)',
     'Mid Level (3-5 years)',
     'Senior Level (6-10 years)',
-    'Executive Level (10+ years)'
+    'Executive Level (10+ years)',
   ];
 
   @override
@@ -55,35 +55,36 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
     setState(() {
       _uploadProgress = 0.0;
     });
-    
+
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf', 'doc', 'docx'],
     );
-    
+
     if (result != null) {
       setState(() {
         _selectedFilePath = result.files.single.name;
       });
-      
+
       // Simulate file upload progress
       Timer.periodic(const Duration(milliseconds: 100), (timer) {
         setState(() {
           _uploadProgress += 0.05;
         });
-        
+
         if (_uploadProgress >= 1.0) {
           timer.cancel();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('✅ ${result.files.single.name} uploaded successfully!'),
+              content: Text(
+                '✅ ${result.files.single.name} uploaded successfully!',
+              ),
               backgroundColor: AppColors.success,
             ),
           );
         }
       });
     }
-
   }
 
   Future<void> _analyzeResume() async {
@@ -91,20 +92,23 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please fill all fields and select a resume file'),
-          backgroundColor: const Color(0xFFEF4444),
+          backgroundColor: Color(0xFFEF4444),
         ),
       );
       return;
     }
 
     final appProvider = Provider.of<AppProvider>(context, listen: false);
-    await appProvider.analyzeResume(_selectedFilePath!, _targetRoleController.text);
+    await appProvider.analyzeResume(
+      _selectedFilePath!,
+      _targetRoleController.text,
+    );
 
     if (mounted && appProvider.error == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Resume analysis completed!'),
-          backgroundColor: const Color(0xFF10B981),
+          backgroundColor: Color(0xFF10B981),
         ),
       );
     }
@@ -139,7 +143,8 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
                 _buildUploadSection(appProvider),
                 const SizedBox(height: 20),
                 if (_isAnalyzing) _buildAnalyzingWidget(),
-                if (appProvider.resumeAnalysis.atsScore > 0) _buildResultsSection(appProvider),
+                if (appProvider.resumeAnalysis.atsScore > 0)
+                  _buildResultsSection(appProvider),
               ],
             ),
           ),
@@ -159,9 +164,9 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
             children: [
               Text(
                 'Upload Your Resume',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
 
@@ -180,23 +185,31 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        _selectedFilePath != null ? Icons.check_circle : Icons.cloud_upload,
+                        _selectedFilePath != null
+                            ? Icons.check_circle
+                            : Icons.cloud_upload,
                         size: 48,
-                        color: _selectedFilePath != null ? const Color(0xFF10B981) : Colors.grey[400],
+                        color: _selectedFilePath != null
+                            ? const Color(0xFF10B981)
+                            : Colors.grey[400],
                       ),
                       const SizedBox(height: 8),
                       if (_uploadProgress > 0 && _uploadProgress < 1)
                         LinearProgressIndicator(
                           value: _uploadProgress,
                           backgroundColor: Colors.grey[300],
-                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.primary,
+                          ),
                         ),
                       Text(
-                        _selectedFilePath != null 
-                          ? 'File selected: $_selectedFilePath'
-                          : 'Tap to select resume (PDF, DOC, DOCX)',
+                        _selectedFilePath != null
+                            ? 'File selected: $_selectedFilePath'
+                            : 'Tap to select resume (PDF, DOC, DOCX)',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: _selectedFilePath != null ? const Color(0xFF10B981) : Colors.grey[600],
+                          color: _selectedFilePath != null
+                              ? const Color(0xFF10B981)
+                              : Colors.grey[600],
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -234,7 +247,7 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
               const SizedBox(height: 16),
 
               DropdownButtonFormField<String>(
-                value: _selectedIndustry,
+                initialValue: _selectedIndustry,
                 decoration: const InputDecoration(
                   labelText: 'Industry *',
                   border: OutlineInputBorder(),
@@ -260,16 +273,13 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
               const SizedBox(height: 16),
 
               DropdownButtonFormField<String>(
-                value: _selectedExperience,
+                initialValue: _selectedExperience,
                 decoration: const InputDecoration(
                   labelText: 'Experience Level *',
                   border: OutlineInputBorder(),
                 ),
                 items: _experienceLevels.map((level) {
-                  return DropdownMenuItem(
-                    value: level,
-                    child: Text(level),
-                  );
+                  return DropdownMenuItem(value: level, child: Text(level));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -298,25 +308,30 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
                     ),
                   ),
                   child: _isAnalyzing
-                    ? const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ? const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
                             ),
+                            SizedBox(width: 12),
+                            Text('Analyzing...'),
+                          ],
+                        )
+                      : const Text(
+                          'Analyze Resume',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
-                          SizedBox(width: 12),
-                          Text('Analyzing...'),
-                        ],
-                      )
-                    : const Text(
-                        'Analyze Resume',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
+                        ),
                 ),
               ),
             ],
@@ -336,9 +351,9 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
           children: [
             Text(
               'ATS Compatibility Score',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Center(
@@ -351,16 +366,17 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
                   children: [
                     Text(
                       '${analysis.atsScore}%',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: _getScoreColor(analysis.atsScore),
-                      ),
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: _getScoreColor(analysis.atsScore),
+                          ),
                     ),
                     Text(
                       _getScoreLabel(analysis.atsScore),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -404,17 +420,12 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
           const SizedBox(height: 8),
           Text(
             'This may take a few moments',
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
           ),
         ],
       ),
     );
   }
-
-
 
   Widget _buildScoreCards() {
     return Container(
@@ -444,17 +455,41 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
           const SizedBox(height: 20),
           Row(
             children: [
-              Expanded(child: _buildScoreCard('ATS Score', _analysisResults['atsScore'], AppColors.primary)),
+              Expanded(
+                child: _buildScoreCard(
+                  'ATS Score',
+                  _analysisResults['atsScore'],
+                  AppColors.primary,
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _buildScoreCard('Skills Match', _analysisResults['skillsMatch'], AppColors.accent)),
+              Expanded(
+                child: _buildScoreCard(
+                  'Skills Match',
+                  _analysisResults['skillsMatch'],
+                  AppColors.accent,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(child: _buildScoreCard('Experience', _analysisResults['experienceMatch'], AppColors.success)),
+              Expanded(
+                child: _buildScoreCard(
+                  'Experience',
+                  _analysisResults['experienceMatch'],
+                  AppColors.success,
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _buildScoreCard('Keywords', _analysisResults['keywordDensity'], AppColors.warning)),
+              Expanded(
+                child: _buildScoreCard(
+                  'Keywords',
+                  _analysisResults['keywordDensity'],
+                  AppColors.warning,
+                ),
+              ),
             ],
           ),
         ],
@@ -468,7 +503,9 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
       decoration: BoxDecoration(
         color: Color.fromARGB(26, color.red, color.green, color.blue),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Color.fromARGB(77, color.red, color.green, color.blue)),
+        border: Border.all(
+          color: Color.fromARGB(77, color.red, color.green, color.blue),
+        ),
       ),
       child: Column(
         children: [
@@ -483,10 +520,7 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
           const SizedBox(height: 4),
           Text(
             title,
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
@@ -517,7 +551,11 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.check_circle, color: AppColors.success, size: 20),
+                    Icon(
+                      Icons.check_circle,
+                      color: AppColors.success,
+                      size: 20,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       'Strengths',
@@ -530,8 +568,8 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                ...(_analysisResults['strengths'] as List).map((strength) => 
-                  Padding(
+                ...(_analysisResults['strengths'] as List).map(
+                  (strength) => Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -576,7 +614,11 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.lightbulb_outline, color: AppColors.warning, size: 20),
+                    Icon(
+                      Icons.lightbulb_outline,
+                      color: AppColors.warning,
+                      size: 20,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       'Improvements',
@@ -589,8 +631,8 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                ...(_analysisResults['improvements'] as List).map((improvement) => 
-                  Padding(
+                ...(_analysisResults['improvements'] as List).map(
+                  (improvement) => Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -660,24 +702,29 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: (_analysisResults['missingKeywords'] as List).map((keyword) => 
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: const Color(0x1AEF4444),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0x4DEF4444)),
-                ),
-                child: Text(
-                  keyword,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.error,
-                    fontWeight: FontWeight.w500,
+            children: (_analysisResults['missingKeywords'] as List)
+                .map(
+                  (keyword) => Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0x1AEF4444),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: const Color(0x4DEF4444)),
+                    ),
+                    child: Text(
+                      keyword,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.error,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ).toList(),
+                )
+                .toList(),
           ),
         ],
       ),
@@ -716,8 +763,8 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
             ],
           ),
           const SizedBox(height: 12),
-          ...(_analysisResults['recommendations'] as List).map((course) => 
-            Container(
+          ...(_analysisResults['recommendations'] as List).map(
+            (course) => Container(
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -749,7 +796,11 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
                         ),
                         Row(
                           children: [
-                            Icon(Icons.star, color: AppColors.warning, size: 12),
+                            Icon(
+                              Icons.star,
+                              color: AppColors.warning,
+                              size: 12,
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               course['rating'].toString(),
@@ -775,15 +826,15 @@ class _ResumeAnalysisScreenState extends State<ResumeAnalysisScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6),
                       ),
                     ),
-                    child: const Text(
-                      'Start',
-                      style: TextStyle(fontSize: 12),
-                    ),
+                    child: const Text('Start', style: TextStyle(fontSize: 12)),
                   ),
                 ],
               ),

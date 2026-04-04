@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_app/providers/app_provider.dart';
 import 'package:flutter_app/utils/app_theme.dart';
-import 'package:flutter_app/screens/onboarding_screen.dart';
 import 'package:flutter_app/screens/career_selection_screen.dart';
-import 'package:flutter_app/screens/dashboard_screen_simple.dart';
 import 'package:flutter_app/screens/enhanced_login_screen.dart';
 import 'package:flutter_app/screens/enhanced_dashboard_screen.dart';
 import 'package:flutter_app/screens/ai_mentor_chat_screen.dart';
-import 'package:flutter_app/screens/profile_screen.dart';
 import 'package:flutter_app/screens/enhanced_resources_screen.dart';
 import 'package:flutter_app/screens/enhanced_resume_screen.dart';
 
@@ -22,9 +19,7 @@ class OSCARCareerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => AppProvider()),
-      ],
+      providers: [ChangeNotifierProvider(create: (context) => AppProvider())],
       child: MaterialApp(
         title: 'OSCAR - Career Guidance Platform',
         theme: AppTheme.lightTheme,
@@ -45,15 +40,15 @@ class AppNavigator extends StatelessWidget {
         if (!appProvider.hasSeenOnboarding) {
           return const OnboardingScreen();
         }
-        
+
         if (!appProvider.isAuthenticated) {
           return const EnhancedLoginScreen();
         }
-        
+
         if (appProvider.selectedCareerPath == null) {
           return const CareerSelectionScreen();
         }
-        
+
         return const MainDashboard();
       },
     );
@@ -81,10 +76,7 @@ class _MainDashboardState extends State<MainDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: _selectedIndex, children: _pages),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           boxShadow: [
@@ -139,20 +131,12 @@ class _MainDashboardState extends State<MainDashboard> {
 
 // Placeholder screens - will be implemented next
 
-
-
-
-
-
-
-
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Center(child: Text('Profile Screen - Coming Soon'));
+  Widget build(BuildContext context) =>
+      const Center(child: Text('Profile Screen - Coming Soon'));
 }
-
-
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -169,28 +153,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     OnboardingPage(
       title: 'Welcome to OSCAR',
       subtitle: 'Your AI-powered career guidance companion for rural students',
-      description: 'Access technology knowledge, career paths, and opportunities designed specifically for students from rural backgrounds.',
+      description:
+          'Access technology knowledge, career paths, and opportunities designed specifically for students from rural backgrounds.',
       icon: Icons.school,
       color: const Color(0xFF2563EB),
     ),
     OnboardingPage(
       title: 'Multiple Career Paths',
       subtitle: 'Explore diverse career opportunities across all fields',
-      description: 'From technology to government jobs, discover paths that match your interests and local opportunities.',
+      description:
+          'From technology to government jobs, discover paths that match your interests and local opportunities.',
       icon: Icons.explore,
       color: const Color(0xFF059669),
     ),
     OnboardingPage(
       title: 'Multilingual AI Mentor',
       subtitle: 'Get guidance in your preferred language',
-      description: 'Our AI mentor speaks your language and understands your local context to provide personalized advice.',
+      description:
+          'Our AI mentor speaks your language and understands your local context to provide personalized advice.',
       icon: Icons.psychology,
       color: const Color(0xFF8B5CF6),
     ),
     OnboardingPage(
       title: 'Scholarships & Resources',
       subtitle: 'Access funding and learning materials',
-      description: 'Find scholarships, free courses, and resources to support your educational journey.',
+      description:
+          'Find scholarships, free courses, and resources to support your educational journey.',
       icon: Icons.card_giftcard,
       color: const Color(0xFFEA580C),
     ),
@@ -227,7 +215,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   },
                 ),
               ),
-              
+
               // Page indicators
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
@@ -250,7 +238,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
               ),
-              
+
               // Next/Get Started button
               Padding(
                 padding: const EdgeInsets.all(20),
@@ -265,7 +253,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           curve: Curves.easeInOut,
                         );
                       } else {
-                        final appProvider = Provider.of<AppProvider>(context, listen: false);
+                        final appProvider = Provider.of<AppProvider>(
+                          context,
+                          listen: false,
+                        );
                         appProvider.completeOnboarding();
                       }
                     },
@@ -307,15 +298,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               color: Colors.white.withOpacity(0.2),
               borderRadius: BorderRadius.circular(30),
             ),
-            child: Icon(
-              page.icon,
-              size: 60,
-              color: Colors.white,
-            ),
+            child: Icon(page.icon, size: 60, color: Colors.white),
           ),
-          
+
           const SizedBox(height: 40),
-          
+
           Text(
             page.title,
             style: const TextStyle(
@@ -325,9 +312,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           Text(
             page.subtitle,
             style: const TextStyle(
@@ -337,9 +324,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           Text(
             page.description,
             style: TextStyle(
@@ -370,4 +357,3 @@ class OnboardingPage {
     required this.color,
   });
 }
-

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_app/providers/app_provider.dart';
 import 'package:flutter_app/utils/app_theme.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -12,15 +10,15 @@ class EnhancedResumeScreen extends StatefulWidget {
   State<EnhancedResumeScreen> createState() => _EnhancedResumeScreenState();
 }
 
-class _EnhancedResumeScreenState extends State<EnhancedResumeScreen> 
+class _EnhancedResumeScreenState extends State<EnhancedResumeScreen>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   String? _selectedFileName;
   bool _isAnalyzing = false;
   bool _hasAnalyzed = false;
-  
+
   // Mock ATS analysis results
   final ATSAnalysisResult _analysisResult = ATSAnalysisResult(
     overallScore: 78,
@@ -38,18 +36,22 @@ class _EnhancedResumeScreenState extends State<EnhancedResumeScreen>
       'Well-structured work experience',
       'Proper education section',
       'Good use of action verbs',
-      'Professional formatting'
+      'Professional formatting',
     ],
     improvements: [
       'Add more industry-specific keywords',
       'Include quantified achievements',
       'Add a skills section with relevant technologies',
       'Include certifications if any',
-      'Optimize for ATS scanning'
+      'Optimize for ATS scanning',
     ],
     keywords: [
       KeywordAnalysis('Python', true, 'Found 2 times'),
-      KeywordAnalysis('Machine Learning', false, 'Not found - highly recommended'),
+      KeywordAnalysis(
+        'Machine Learning',
+        false,
+        'Not found - highly recommended',
+      ),
       KeywordAnalysis('Project Management', true, 'Found 1 time'),
       KeywordAnalysis('Communication', false, 'Not found - recommended'),
       KeywordAnalysis('Leadership', true, 'Found 1 time'),
@@ -172,10 +174,7 @@ class _EnhancedResumeScreenState extends State<EnhancedResumeScreen>
       foregroundColor: Colors.white,
       title: const Text(
         'Resume Analysis',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-        ),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       ),
       actions: [
         IconButton(
@@ -207,11 +206,7 @@ class _EnhancedResumeScreenState extends State<EnhancedResumeScreen>
               color: Colors.white.withOpacity(0.2),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const Icon(
-              Icons.description,
-              color: Colors.white,
-              size: 40,
-            ),
+            child: const Icon(Icons.description, color: Colors.white, size: 40),
           ),
           const SizedBox(height: 16),
           const Text(
@@ -240,10 +235,7 @@ class _EnhancedResumeScreenState extends State<EnhancedResumeScreen>
               icon: const Icon(Icons.upload_file),
               label: const Text(
                 'Upload Resume',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
@@ -323,10 +315,7 @@ class _EnhancedResumeScreenState extends State<EnhancedResumeScreen>
                     _hasAnalyzed = false;
                   });
                 },
-                icon: Icon(
-                  Icons.close,
-                  color: AppColors.textTertiary,
-                ),
+                icon: Icon(Icons.close, color: AppColors.textTertiary),
               ),
             ],
           ),
@@ -338,10 +327,7 @@ class _EnhancedResumeScreenState extends State<EnhancedResumeScreen>
               onPressed: _analyzeResume,
               child: const Text(
                 'Analyze Resume',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -373,10 +359,7 @@ class _EnhancedResumeScreenState extends State<EnhancedResumeScreen>
           const SizedBox(height: 8),
           Text(
             'This may take a few moments',
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
           ),
         ],
       ),
@@ -443,7 +426,9 @@ class _EnhancedResumeScreenState extends State<EnhancedResumeScreen>
                 ),
               ],
             ),
-            progressColor: _getScoreColor(_analysisResult.overallScore.toDouble()),
+            progressColor: _getScoreColor(
+              _analysisResult.overallScore.toDouble(),
+            ),
             backgroundColor: AppColors.surfaceContainerHighest,
             circularStrokeCap: CircularStrokeCap.round,
           ),
@@ -647,11 +632,7 @@ class _EnhancedResumeScreenState extends State<EnhancedResumeScreen>
         children: [
           Row(
             children: [
-              Icon(
-                Icons.check_circle,
-                color: AppColors.success,
-                size: 20,
-              ),
+              Icon(Icons.check_circle, color: AppColors.success, size: 20),
               const SizedBox(width: 8),
               const Text(
                 'Strengths',
@@ -664,33 +645,35 @@ class _EnhancedResumeScreenState extends State<EnhancedResumeScreen>
             ],
           ),
           const SizedBox(height: 12),
-          ..._analysisResult.strengths.map((strength) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 4,
-                  height: 4,
-                  margin: const EdgeInsets.only(top: 6),
-                  decoration: BoxDecoration(
-                    color: AppColors.success,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    strength,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: AppColors.textPrimary,
+          ..._analysisResult.strengths.map(
+            (strength) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 4,
+                    height: 4,
+                    margin: const EdgeInsets.only(top: 6),
+                    decoration: BoxDecoration(
+                      color: AppColors.success,
+                      shape: BoxShape.circle,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      strength,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          )),
+          ),
         ],
       ),
     );
@@ -709,11 +692,7 @@ class _EnhancedResumeScreenState extends State<EnhancedResumeScreen>
         children: [
           Row(
             children: [
-              Icon(
-                Icons.warning,
-                color: AppColors.error,
-                size: 20,
-              ),
+              Icon(Icons.warning, color: AppColors.error, size: 20),
               const SizedBox(width: 8),
               const Text(
                 'Improvements',
@@ -726,33 +705,35 @@ class _EnhancedResumeScreenState extends State<EnhancedResumeScreen>
             ],
           ),
           const SizedBox(height: 12),
-          ..._analysisResult.improvements.map((improvement) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 4,
-                  height: 4,
-                  margin: const EdgeInsets.only(top: 6),
-                  decoration: BoxDecoration(
-                    color: AppColors.error,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    improvement,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: AppColors.textPrimary,
+          ..._analysisResult.improvements.map(
+            (improvement) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 4,
+                    height: 4,
+                    margin: const EdgeInsets.only(top: 6),
+                    decoration: BoxDecoration(
+                      color: AppColors.error,
+                      shape: BoxShape.circle,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      improvement,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          )),
+          ),
         ],
       ),
     );
@@ -771,10 +752,7 @@ class _EnhancedResumeScreenState extends State<EnhancedResumeScreen>
             icon: const Icon(Icons.download),
             label: const Text(
               'Download Detailed Report',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
         ),
