@@ -16,7 +16,24 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="AI-powered career guidance and skill development mobile app">
+
+  <!-- Camera and microphone permissions for web -->
+  <meta name="permissions" content="camera microphone">
+  <script>
+    // Request camera and microphone permissions
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then(function(stream) {
+          console.log('Camera and microphone access granted');
+          // Stop the stream for now, will be used when needed
+          stream.getTracks().forEach(track => track.stop());
+        })
+        .catch(function(err) {
+          console.log('Camera/microphone access denied:', err);
+        });
+    }
+  </script>
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">

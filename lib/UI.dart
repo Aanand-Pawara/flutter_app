@@ -37,8 +37,8 @@ class UIComponents {
         shaderCallback: (bounds) => gradient.createShader(
           Rect.fromLTWH(0, 0, bounds.width, bounds.height),
         ),
-        child: textWidget,
         blendMode: BlendMode.srcIn,
+        child: textWidget,
       );
     } else {
       return textWidget;
@@ -69,8 +69,8 @@ class UIComponents {
         shaderCallback: (bounds) => textGradient.createShader(
           Rect.fromLTWH(0, 0, bounds.width, bounds.height),
         ),
-        child: buttonChild,
         blendMode: BlendMode.srcIn,
+        child: buttonChild,
       );
     }
 
@@ -122,7 +122,7 @@ class UIComponents {
           focusNode: focusNode,
           cursorColor: Colors.black,
           style: TextStyle(
-            color: focusNode!.hasFocus && textGradient == null
+            color: focusNode.hasFocus && textGradient == null
                 ? Colors.black
                 : null,
             fontFamily: "Outfit",
@@ -147,13 +147,13 @@ class UIComponents {
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(width: 0, color: Colors.transparent),
             ),
-            prefixIcon: iconGradient != null && focusNode!.hasFocus
+            prefixIcon: iconGradient != null && focusNode.hasFocus
                 ? ShaderMask(
                     shaderCallback: (bounds) => iconGradient.createShader(
                       Rect.fromLTWH(0, 0, bounds.width, bounds.height),
                     ),
-                    child: Icon(icon, color: Colors.white),
                     blendMode: BlendMode.srcIn,
+                    child: Icon(icon, color: Colors.white),
                   )
                 : Icon(icon, color: Colors.grey),
           ),
@@ -163,7 +163,7 @@ class UIComponents {
         if (borderGradient != null) {
           textField = Stack(
             children: [
-              if (focusNode!.hasFocus)
+              if (focusNode.hasFocus)
                 Positioned.fill(
                   child: IgnorePointer(
                     child: Container(
@@ -189,13 +189,13 @@ class UIComponents {
         }
 
         // Wrap text in ShaderMask if textGradient is provided
-        if (textGradient != null && focusNode!.hasFocus) {
+        if (textGradient != null && focusNode.hasFocus) {
           textField = ShaderMask(
             shaderCallback: (bounds) => textGradient.createShader(
               Rect.fromLTWH(0, 0, bounds.width, bounds.height),
             ),
-            child: textField,
             blendMode: BlendMode.srcIn,
+            child: textField,
           );
         }
 
