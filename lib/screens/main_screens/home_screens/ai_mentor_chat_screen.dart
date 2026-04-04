@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/bot/BotWebViewScreen.dart';
 import 'package:flutter_app/utils/app_theme.dart';
 
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';

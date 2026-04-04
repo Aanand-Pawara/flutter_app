@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/firebase_service.dart';
 
@@ -93,6 +92,12 @@ class AppProvider extends ChangeNotifier {
       await FirebaseService.instance.signIn(email: email, password: password);
       String UserName = await FirebaseService.instance.getUserName();
       String Uid = FirebaseService.instance.getUserId();
+
+      // If no username found, extract first name from email
+      if (UserName.isEmpty) {
+        UserName = _extractFirstNameFromEmail(email);
+      }
+
       _user = User(id: Uid, name: UserName, email: email);
       _isAuthenticated = true;
       _error = null;
@@ -104,17 +109,47 @@ class AppProvider extends ChangeNotifier {
     }
   }
 
+  // Helper method to extract first name from email
+  String _extractFirstNameFromEmail(String email) {
+    if (email.isEmpty) return 'Student';
+
+    // Extract the part before @ symbol
+    String localPart = email.split('@')[0];
+
+    // Remove numbers and special characters
+    localPart = localPart.replaceAll(RegExp(r'[0-9._-]'), ' ');
+
+    // Split by spaces and take the first part
+    List<String> parts = localPart
+        .split(' ')
+        .where((part) => part.isNotEmpty)
+        .toList();
+
+    if (parts.isNotEmpty) {
+      // Capitalize first letter
+      String firstName = parts[0].toLowerCase();
+      return firstName[0].toUpperCase() + firstName.substring(1);
+    }
+
+    return 'Student';
+  }
+
   Future<void> register(String name, String email, String password) async {
     setLoading(true);
     try {
+      // If no name provided, extract first name from email
+      String displayName = name.trim().isEmpty
+          ? _extractFirstNameFromEmail(email)
+          : name;
+
       await FirebaseService.instance.signUp(
         email: email,
         password: password,
-        username: name,
+        username: displayName,
       );
 
       String Uid = FirebaseService.instance.getUserId();
-      _user = User(id: Uid, name: name, email: email);
+      _user = User(id: Uid, name: displayName, email: email);
 
       _isAuthenticated = true;
       _error = null;

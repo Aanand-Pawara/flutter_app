@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_app/utils/app_theme.dart';
+import 'package:flutter_app/services/api_service.dart';
+import 'package:flutter_app/services/interview_service.dart';
+import 'package:flutter_app/models/course.dart';
+import 'package:flutter_app/models/interview.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_app/providers/app_provider.dart';
 
 class EnhancedResourcesScreen extends StatefulWidget {
   const EnhancedResourcesScreen({super.key});
@@ -19,9 +26,18 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
 
+  // API Integration
+  bool _isLoading = false;
+  List<Course> _apiCourses = [];
+  List<Interview> _mockInterviews = [];
+  final List<Interview> _liveInterviews = [];
+  final ApiService _apiService = ApiService();
+  final InterviewService _interviewService = InterviewService();
+
   final List<String> _categories = [
     'All',
     'Courses',
+    'Interview Prep',
     'Scholarships',
     'Jobs',
     'Roadmaps',
@@ -198,13 +214,322 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
       tags: ['NCERT', 'Class 12', 'Solutions'],
       provider: 'Education Board',
     ),
+
+    // Interview Preparation
+    ResourceItem(
+      id: '11',
+      title: 'Mock Interview - Technical',
+      description:
+          'Practice technical interviews with AI-powered feedback and real-time analysis.',
+      category: 'Interview Prep',
+      type: ResourceType.course,
+      rating: 4.7,
+      price: 'Free',
+      duration: '45 mins',
+      level: 'Intermediate',
+      imageUrl: 'https://via.placeholder.com/150x100',
+      isBookmarked: false,
+      tags: ['Technical', 'Mock Interview', 'AI Feedback'],
+      provider: 'OSCAR Interview',
+    ),
+    ResourceItem(
+      id: '12',
+      title: 'Live Interview with Expert',
+      description:
+          'Schedule live 1-on-1 interview sessions with industry professionals.',
+      category: 'Interview Prep',
+      type: ResourceType.course,
+      rating: 4.9,
+      price: '₹499',
+      duration: '60 mins',
+      level: 'All Levels',
+      imageUrl: 'https://via.placeholder.com/150x100',
+      isBookmarked: true,
+      tags: ['Live Interview', 'Expert', 'Professional'],
+      provider: 'Interview Pro',
+    ),
+    ResourceItem(
+      id: '13',
+      title: 'HR & Behavioral Interview Prep',
+      description:
+          'Master common HR questions and behavioral interview techniques.',
+      category: 'Interview Prep',
+      type: ResourceType.course,
+      rating: 4.6,
+      price: 'Free',
+      duration: '30 mins',
+      level: 'Beginner',
+      imageUrl: 'https://via.placeholder.com/150x100',
+      isBookmarked: false,
+      tags: ['HR', 'Behavioral', 'Communication'],
+      provider: 'Career Coach',
+    ),
+    ResourceItem(
+      id: '14',
+      title: 'Government Job Interview Guide',
+      description:
+          'Comprehensive guide for government job interviews with practice questions.',
+      category: 'Interview Prep',
+      type: ResourceType.course,
+      rating: 4.8,
+      price: 'Free',
+      duration: '90 mins',
+      level: 'Intermediate',
+      imageUrl: 'https://via.placeholder.com/150x100',
+      isBookmarked: true,
+      tags: ['Government', 'Public Sector', 'Interview'],
+      provider: 'Govt Career Hub',
+    ),
   ];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _setupAnimations();
+    _loadAPIData();
+  }
+
+  /// Load real data from APIs
+  Future<void> _loadAPIData() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final appProvider = Provider.of<AppProvider>(context, listen: false);
+      final careerPath = appProvider.selectedCareerPath ?? 'technology';
+
+      // Load courses from multiple sources
+      final futures = await Future.wait([
+        _apiService.searchCourses(
+          query: careerPath,
+          freeOnly: false,
+          limit: 10,
+        ),
+        _apiService.getPersonalizedCourses(
+          careerPath: careerPath,
+          currentLevel: 'intermediate',
+        ),
+        _interviewService.getMockInterviews(),
+        _interviewService.getAvailableSlots(),
+      ]);
+
+      setState(() {
+        _apiCourses = futures[0] as List<Course>;
+        _apiCourses.addAll(futures[1] as List<Course>);
+        _mockInterviews = futures[2] as List<Interview>;
+        // _liveInterviews can be populated from available slots
+      });
+    } catch (e) {
+      print('Error loading API data: $e');
+      // Fallback to static data if API fails
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  /// Refresh data from APIs
+  Future<void> _refreshData() async {
+    await _loadAPIData();
+  }
+
+  /// Book a mock interview
+  Future<void> _bookMockInterview(String interviewId) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      // Find and book the mock interview
+      final interview = _mockInterviews.firstWhere((i) => i.id == interviewId);
+
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Mock interview "${interview.title}" booked successfully!',
+          ),
+          backgroundColor: AppColors.success,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to book interview: $e'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  /// Schedule a live interview
+  Future<void> _scheduleLiveInterview() async {
+    try {
+      final availableSlots = await _interviewService.getAvailableSlots();
+
+      if (availableSlots.isNotEmpty && mounted) {
+        _showLiveInterviewDialog(availableSlots);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error loading available slots: $e'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    }
+  }
+
+  /// Show live interview booking dialog
+  void _showLiveInterviewDialog(List<Map<String, dynamic>> availableSlots) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Row(
+            children: [
+              Icon(Icons.video_call, color: AppColors.primary, size: 28),
+              const SizedBox(width: 12),
+              const Text(
+                'Schedule Live Interview',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+            ],
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            height: 300,
+            child: ListView.builder(
+              itemCount: availableSlots.length,
+              itemBuilder: (context, index) {
+                final slot = availableSlots[index];
+                final date = DateTime.parse(slot['date'].toString());
+                final isAvailable = slot['available'] ?? false;
+
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: isAvailable
+                          ? AppColors.success
+                          : AppColors.textTertiary,
+                      child: Icon(
+                        isAvailable ? Icons.check : Icons.close,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    title: Text(
+                      '${date.day}/${date.month} at ${date.hour}:${date.minute.toString().padLeft(2, '0')}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: isAvailable
+                            ? AppColors.textPrimary
+                            : AppColors.textTertiary,
+                      ),
+                    ),
+                    subtitle: Text(
+                      slot['interviewer'] ?? 'Expert Interviewer',
+                      style: TextStyle(
+                        color: isAvailable
+                            ? AppColors.textSecondary
+                            : AppColors.textTertiary,
+                      ),
+                    ),
+                    trailing: isAvailable
+                        ? ElevatedButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                              await _bookLiveInterviewSlot(slot['id']);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text(
+                              'Book',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        : const Text(
+                            'Unavailable',
+                            style: TextStyle(color: AppColors.textTertiary),
+                          ),
+                    enabled: isAvailable,
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: AppColors.textSecondary),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// Book a live interview slot
+  Future<void> _bookLiveInterviewSlot(String slotId) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      final interview = await _interviewService.bookLiveInterview(
+        slotId: slotId,
+        category: 'technical',
+        level: 'intermediate',
+        topics: ['Programming', 'System Design'],
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Live interview scheduled successfully!\nMeeting ID: ${interview.meetingId}',
+          ),
+          backgroundColor: AppColors.success,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 4),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to book live interview: $e'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void _setupAnimations() {
@@ -263,6 +588,7 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
                   controller: _tabController,
                   children: [
                     _buildResourcesList(),
+                    _buildInterviewPrepSection(),
                     _buildBookmarkedResources(),
                   ],
                 ),
@@ -416,6 +742,7 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
         unselectedLabelColor: AppColors.textSecondary,
         tabs: const [
           Tab(text: 'All Resources'),
+          Tab(text: 'Interview Prep'),
           Tab(text: 'Bookmarked'),
         ],
       ),
@@ -898,6 +1225,428 @@ class _EnhancedResourcesScreenState extends State<EnhancedResourcesScreen>
       SnackBar(
         content: Text('Opening ${resource.title}...'),
         duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  /// Build interview preparation section with live and mock interviews
+  Widget _buildInterviewPrepSection() {
+    return RefreshIndicator(
+      onRefresh: _refreshData,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Interview Prep Header
+            Row(
+              children: [
+                Icon(Icons.psychology, color: AppColors.primary, size: 28),
+                const SizedBox(width: 12),
+                const Text(
+                  'Interview Preparation',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Practice with mock interviews and schedule live sessions',
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+            ),
+            const SizedBox(height: 24),
+
+            // Quick Actions
+            Row(
+              children: [
+                Expanded(
+                  child: _buildInterviewActionCard(
+                    'Mock Interview',
+                    'Start AI-powered practice',
+                    Icons.smart_toy,
+                    AppColors.primary,
+                    () => _bookMockInterview('mock_1'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildInterviewActionCard(
+                    'Live Interview',
+                    'Book with expert',
+                    Icons.video_call,
+                    AppColors.accent,
+                    _scheduleLiveInterview,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // Mock Interviews Section
+            const Text(
+              'Mock Interviews',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+            if (_isLoading)
+              const Center(child: CircularProgressIndicator())
+            else if (_mockInterviews.isNotEmpty)
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _mockInterviews.length,
+                itemBuilder: (context, index) {
+                  final interview = _mockInterviews[index];
+                  return _buildInterviewCard(interview, isMock: true);
+                },
+              )
+            else
+              _buildEmptyState('No mock interviews available'),
+
+            const SizedBox(height: 24),
+
+            // Live Interviews Section
+            const Text(
+              'Available Live Sessions',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+            _buildLiveInterviewSlots(),
+
+            const SizedBox(height: 24),
+
+            // Interview Tips
+            _buildInterviewTips(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build interview action card
+  Widget _buildInterviewActionCard(
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color.withOpacity(0.3), width: 1),
+        ),
+        child: Column(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: Colors.white, size: 24),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: color,
+                fontSize: 14,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build interview card
+  Widget _buildInterviewCard(Interview interview, {bool isMock = false}) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: isMock
+                        ? AppColors.primary.withOpacity(0.1)
+                        : AppColors.accent.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    isMock ? Icons.smart_toy : Icons.person,
+                    color: isMock ? AppColors.primary : AppColors.accent,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        interview.title,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        interview.description,
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 12,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                _buildInfoChip('${interview.duration} min', Icons.schedule),
+                const SizedBox(width: 8),
+                _buildInfoChip(interview.level, Icons.signal_cellular_alt),
+                const SizedBox(width: 8),
+                _buildInfoChip(interview.category, Icons.category),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Topics: ${interview.topics.take(3).join(', ')}',
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 12,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () => isMock
+                      ? _bookMockInterview(interview.id)
+                      : _scheduleLiveInterview(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isMock
+                        ? AppColors.primary
+                        : AppColors.accent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    isMock ? 'Start' : 'Book',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build live interview slots
+  Widget _buildLiveInterviewSlots() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.outline, width: 1),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(Icons.calendar_today, color: AppColors.primary, size: 20),
+              const SizedBox(width: 8),
+              const Text(
+                'Next Available Slots',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildTimeSlot('Today', '2:00 PM', true),
+              _buildTimeSlot('Tomorrow', '10:00 AM', true),
+              _buildTimeSlot('Wed', '4:00 PM', false),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _scheduleLiveInterview,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'View All Slots',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build time slot chip
+  Widget _buildTimeSlot(String day, String time, bool available) {
+    return Column(
+      children: [
+        Text(
+          day,
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: available ? AppColors.textPrimary : AppColors.textTertiary,
+            fontSize: 12,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: available
+                ? AppColors.success.withOpacity(0.1)
+                : AppColors.textTertiary.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: available ? AppColors.success : AppColors.textTertiary,
+              width: 1,
+            ),
+          ),
+          child: Text(
+            time,
+            style: TextStyle(
+              fontSize: 10,
+              color: available ? AppColors.success : AppColors.textTertiary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Build interview tips section
+  Widget _buildInterviewTips() {
+    final tips = [
+      'Research the company and role beforehand',
+      'Practice common interview questions',
+      'Prepare examples using the STAR method',
+      'Dress appropriately for the interview',
+      'Arrive 10-15 minutes early',
+      'Ask thoughtful questions about the role',
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.accent.withOpacity(0.1),
+            AppColors.primary.withOpacity(0.1),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.lightbulb, color: AppColors.accent, size: 24),
+              const SizedBox(width: 8),
+              const Text(
+                'Interview Tips',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...tips.map(
+            (tip) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 6,
+                    height: 6,
+                    margin: const EdgeInsets.only(top: 6),
+                    decoration: BoxDecoration(
+                      color: AppColors.accent,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      tip,
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build empty state
+  Widget _buildEmptyState(String message) {
+    return Container(
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        children: [
+          Icon(Icons.inbox, size: 64, color: AppColors.textTertiary),
+          const SizedBox(height: 16),
+          Text(
+            message,
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

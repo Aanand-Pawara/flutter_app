@@ -9,6 +9,7 @@ import 'package:flutter_app/screens/main_screens/home_screens/enhanced_dashboard
 import 'package:flutter_app/screens/main_screens/home_screens/ai_mentor_chat_screen.dart';
 import 'package:flutter_app/screens/main_screens/home_screens/enhanced_resources_screen.dart';
 import 'package:flutter_app/screens/main_screens/home_screens/enhanced_resume_screen.dart';
+import 'package:flutter_app/screens/main_screens/home_screens/interview_preparation_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,10 +75,17 @@ class _MainDashboardState extends State<MainDashboard> {
   final List<Widget> _pages = [
     const EnhancedDashboardScreen(),
     const EnhancedResourcesScreen(),
+    const InterviewPreparationScreen(),
     const AIMentorChatScreen(),
     const EnhancedResumeScreen(),
     const ProfileScreen(),
   ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +104,7 @@ class _MainDashboardState extends State<MainDashboard> {
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _selectedIndex,
-          onTap: (index) => setState(() => _selectedIndex = index),
+          onTap: _onItemTapped,
           backgroundColor: Colors.white,
           selectedItemColor: AppColors.primary,
           unselectedItemColor: AppColors.textTertiary,
@@ -116,6 +124,11 @@ class _MainDashboardState extends State<MainDashboard> {
             BottomNavigationBarItem(
               icon: Icon(Icons.psychology_rounded),
               activeIcon: Icon(Icons.psychology),
+              label: 'Interview',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.smart_toy_rounded),
+              activeIcon: Icon(Icons.smart_toy),
               label: 'AI Mentor',
             ),
             BottomNavigationBarItem(
